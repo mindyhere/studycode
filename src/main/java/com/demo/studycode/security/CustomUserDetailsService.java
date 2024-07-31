@@ -2,7 +2,6 @@ package com.demo.studycode.security;
 
 import com.demo.studycode.model.User;
 import com.demo.studycode.repository.AuthRepository;
-import com.demo.studycode.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

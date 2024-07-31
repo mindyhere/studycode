@@ -6,7 +6,10 @@ import com.demo.studycode.dto.UserDTO;
 import com.demo.studycode.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/auth/*")
@@ -17,8 +20,8 @@ public class AuthController {
     /* 회원가입 API */
     @PostMapping("/signUp")
     public ResponseDTO signUp(@RequestBody UserDTO dto) {
-        ResponseDTO<?> result = authService.signUp(dto);
-        return result;
+        ResponseDTO responseDto = authService.signUp(dto);
+        return responseDto;
     }
 
     /* 로그인 API */

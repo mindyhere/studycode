@@ -1,9 +1,8 @@
 package com.demo.studycode.dto;
 
-import com.demo.studycode.model.User;
-import lombok.*;
-
-import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
