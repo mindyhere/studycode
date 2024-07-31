@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     @Autowired
     private AuthService authService;
-//
-//    @Autowired
-//    private JwtTokenProvider jwtProvider;
 
     /* 회원가입 API */
     @PostMapping("/signUp")
