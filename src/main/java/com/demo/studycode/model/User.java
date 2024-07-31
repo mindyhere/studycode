@@ -1,19 +1,15 @@
 package com.demo.studycode.model;
 
+import com.demo.studycode.dto.UserDTO;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
-
 @Entity
+@Table(name = "user")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User { // 유저 정보 저장 용도
 
     @Id
@@ -38,16 +34,25 @@ public class User { // 유저 정보 저장 용도
     private String profile;
 
     @Column
-    @ColumnDefault("1")
-    private int role;   // 일반유저 1, 관리자 0
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private Auth auth;
+    @ColumnDefault("USER")
+    private String role; // USER, ADMIN
 
     @Builder
-    public User(Long id, String email, String passwd, int role) {
+    public User(Long id, String email, String name, String role) {
+        this.id = id;
         this.email = email;
-        this.passwd = passwd;
+        this.name = name;
         this.role = role;
+    }
+
+    @Builder
+    public User(UserDTO dto) {
+        this.id = dto.getId();
+        this.email = dto.getEmail();
+        this.passwd = dto.getPasswd();
+        this.name = dto.getName();
+        this.phone = dto.getPhone();
+        this.profile = dto.getProfile();
+        this.role = dto.getRole();
     }
 }

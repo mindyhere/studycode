@@ -1,18 +1,16 @@
 package com.demo.studycode.service;
 
 import com.demo.studycode.dto.AuthDTO;
+import com.demo.studycode.dto.ResponseDTO;
 import com.demo.studycode.dto.UserDTO;
-import com.demo.studycode.model.Auth;
 import com.demo.studycode.model.User;
 import com.demo.studycode.repository.AuthRepository;
 import com.demo.studycode.repository.UserRepository;
-import com.demo.studycode.security.CustomUserDetails;
 import com.demo.studycode.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -31,73 +29,64 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     @Autowired
     private JwtTokenProvider jwtProvider;
 
-//    public User saveUser(User user) {
-//        user.setPasswd(passwdEncoder.encode(user.getPasswd()));
-//        return userRepository.save(user);
-//    }
-//
-//    public UserDTO findByEmail(String email) {
-//        Optional<User> user= this.userRepository.findByEmail(email);
-//        return new UserDTO(user);
-//    }
 
-    public AuthDTO login(AuthDTO dto) {
-        // 이메일, 비밀번호 확인
-        Optional<User> user = this.userRepository.findByEmail(dto.getEmail());
-        if (!passwdEncoder.matches(dto.getPasswd(), user.get().getPasswd())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다." );
+    // 회원가입
+    @Transactional
+    public ResponseDTO signUp(UserDTO dto) {
+        String email = dto.getEmail();
+        final User EXISTED_USER = authRepository.findByEmail(email).orElse(null);
+
+        if (EXISTED_USER != null) {
+            return ResponseDTO.setFailed("이미 사용 중인 email 입니다.");
         }
 
-        // 토큰 생성
-        String accessToken = this.jwtProvider.generateAccessToken(
-                new UsernamePasswordAuthenticationToken(new CustomUserDetails(user), user.get().getPasswd()));
-        String refreshToken = this.jwtProvider.generateRefreshToken(
-                new UsernamePasswordAuthenticationToken(new CustomUserDetails(user), user.get().getPasswd()));
+        try {
+            // 비밀번호 암호화 -> User entity 생성
+            String encodedPwd = passwdEncoder.encode(dto.getPasswd());
+            dto.setPasswd(encodedPwd);
+            User user = new User(dto);
 
-//         Auth entity가 있을 경우, 토큰 업데이트
-        if (this.authRepository.findByUser(user)) {
-            user.get().getAuth().updateAccessToken(accessToken);
-            user.get().getAuth().updateRefreshToken(refreshToken);
-            return new AuthDTO(user.get().getAuth());
+            // DB에 entity 저장
+            authRepository.save(user);
+        } catch (Exception e) {
+            return ResponseDTO.setFailed("처리 중 문제가 발생했습니다. 잠시 후 다시 이용해주세요.");
         }
-
-//        // IF NOT EXISTS AUTH ENTITY, SAVE AUTH ENTITY AND TOKEN
-//        Auth auth = this.authRepository.save(Auth.builder()
-//                .user(user)
-//                .tokenType("Bearer")
-//                .accessToken(accessToken)
-//                .refreshToken(refreshToken)
-//                .build());
-//        return new AuthResponseDto(auth);
+        return ResponseDTO.setSuccess("가입이 완료되었습니다.");
     }
 
-//    /** 회원가입 */
-//    @Transactional
-//    public void signup(UserRequestDto requestDto) {
-//        // SAVE USER ENTITY
-//        requestDto.setRole(Role.ROLE_USER);
-//        requestDto.setPassword(passwordEncoder.encode(requestDto.getPassword()));
-//        this.userRepository.save(requestDto.toEntity());
-//    }
-//
-//    /** Token 갱신 */
-//    @Transactional
-//    public String refreshToken(String refreshToken) {
-//        // CHECK IF REFRESH_TOKEN EXPIRATION AVAILABLE, UPDATE ACCESS_TOKEN AND RETURN
-//        if (this.jwtTokenProvider.validateToken(refreshToken)) {
-//            Auth auth = this.authRepository.findByRefreshToken(refreshToken).orElseThrow(
-//                    () -> new IllegalArgumentException("해당 REFRESH_TOKEN 을 찾을 수 없습니다.\nREFRESH_TOKEN = " + refreshToken));
-//
-//            String newAccessToken = this.jwtTokenProvider.generateAccessToken(
-//                    new UsernamePasswordAuthenticationToken(
-//                            new CustomUserDetails(auth.getUser()), auth.getUser().getPassword()));
-//            auth.updateAccessToken(newAccessToken);
-//            return newAccessToken;
-//        }
-//
-//        // IF NOT AVAILABLE REFRESH_TOKEN EXPIRATION, REGENERATE ACCESS_TOKEN AND REFRESH_TOKEN
-//        // IN THIS CASE, USER HAVE TO LOGIN AGAIN, SO REGENERATE IS NOT APPROPRIATE
-//        return null;
-//    }
+    // 로그인
+    public ResponseDTO<AuthDTO> signIn(UserDTO dto) {
+        String email = dto.getEmail();
+        String passwd = dto.getPasswd();
+
+        final User EXISTED_USER = authRepository.findByEmail(email).orElse(null);
+        if (EXISTED_USER == null) {
+            return ResponseDTO.setFailed("사용자를 찾을 수 없습니다. 이메일/비밀번호 확인 후 다시 시도해주세요.");
+        }
+
+        String savedPwd = EXISTED_USER.getPasswd(); // 암호화되어 DB에 저장된 비밀번호
+        if (!passwdEncoder.matches(passwd, savedPwd)) { // 입력한 비밀번호와의 일치여부 확인
+            return ResponseDTO.setFailed("비밀번호가 일치하지 않습니다.");
+        }
+
+        AuthDTO authDto = null;
+        try {
+            authDto.setId(EXISTED_USER.getId());
+            authDto.setEmail(EXISTED_USER.getEmail());
+            authDto.setName(EXISTED_USER.getName());
+            authDto.setRole(EXISTED_USER.getRole());
+
+            int duration = 3600;     // 1h
+            String token = jwtProvider.generateToken(email, duration);
+
+            authDto.setAccessToken(token);
+            authDto.setExpireTime(duration);
+
+            return ResponseDTO.setSuccessData("로그인되었습니다.", authDto);
+
+        } catch (Exception e) {
+            return ResponseDTO.setFailed("처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
+        }
+    }
 
 }

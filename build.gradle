@@ -36,11 +36,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.2'
     // 파일업로드
     implementation 'commons-fileupload:commons-fileupload:1.5'
-
+    // validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
