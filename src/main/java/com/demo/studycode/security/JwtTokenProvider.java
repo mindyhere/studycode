@@ -5,6 +5,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
     private static final Logger LOGGER  = LoggerFactory.getLogger(JwtTokenProvider.class);
@@ -48,6 +50,7 @@ public class JwtTokenProvider {
 
             return signedJWT.serialize();
         } catch (JOSEException e) {
+            LOGGER.error(e.getMessage(), e);
             return null;
         }
     }
@@ -58,14 +61,12 @@ public class JwtTokenProvider {
             // 서명 확인을 통한 JWT 검증
             SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(SECURITY_KEY.getBytes());
-            if (!signedJWT.verify(verifier)) { // 서명이 유효하지 않은 경우
-                return null;
-            }
+            // 서명이 유효하지 않은 경우
+            if (!signedJWT.verify(verifier)) return null;
 
             Date expiresAt = signedJWT.getJWTClaimsSet().getExpirationTime();
-            if (!this.validExpireTime(expiresAt)) { // 만료시간이 지난 경우
-                return null;
-            }
+            // 만료시간이 지난 경우
+            if (!this.validExpireTime(expiresAt)) return null;
 
             String email = signedJWT.getJWTClaimsSet().getSubject();
             return email;

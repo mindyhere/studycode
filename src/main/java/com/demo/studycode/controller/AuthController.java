@@ -20,15 +20,20 @@ public class AuthController {
     /* 회원가입 API */
     @PostMapping("/signUp")
     public ResponseDTO signUp(@RequestBody UserDTO dto) {
+
         ResponseDTO responseDto = authService.signUp(dto);
         return responseDto;
+
     }
 
     /* 로그인 API */
     @PostMapping("/signIn")
     public ResponseEntity<?> signIn(@RequestBody UserDTO dto) {
+
+        System.out.println("** 이건 콘솔로그: "+dto);
         ResponseDTO<?> responseDto = authService.signIn(dto);
         return setToken(responseDto);
+
     }
 
     // Response 결과에 따라 Header에 Token 설정
@@ -43,6 +48,7 @@ public class AuthController {
         } else {
             return ResponseEntity.ok().body(responseDto);
         }
+
     }
 
 }

@@ -17,6 +17,7 @@ public class HomeController {
 
     @GetMapping("check")
     public String check() {
-        return "Success";
+        System.out.println("** 홈으로 **");
+        return "success";
     }
 }

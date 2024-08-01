@@ -34,9 +34,7 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
         String email = dto.getEmail();
         final User EXISTED_USER = authRepository.findByEmail(email).orElse(null);
 
-        if (EXISTED_USER != null) {
-            return ResponseDTO.setFailed("이미 사용 중인 email 입니다.");
-        }
+        if (EXISTED_USER != null) return ResponseDTO.setFailed("이미 사용 중인 email 입니다.");
 
         try {
             // 비밀번호 암호화 -> User entity 생성
@@ -58,14 +56,12 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
         String passwd = dto.getPasswd();
 
         final User EXISTED_USER = authRepository.findByEmail(email).orElse(null);
-        if (EXISTED_USER == null) {
-            return ResponseDTO.setFailed("사용자를 찾을 수 없습니다. 이메일/비밀번호 확인 후 다시 시도해주세요.");
-        }
+        if (EXISTED_USER == null) return ResponseDTO.setFailed("error");
 
-        String savedPwd = EXISTED_USER.getPasswd(); // 암호화되어 DB에 저장된 비밀번호
-        if (!passwdEncoder.matches(passwd, savedPwd)) { // 입력한 비밀번호와의 일치여부 확인
-            return ResponseDTO.setFailed("비밀번호가 일치하지 않습니다.");
-        }
+        // 암호화되어 DB에 저장된 비밀번호
+        String savedPwd = EXISTED_USER.getPasswd();
+        // 입력한 비밀번호와의 일치여부 확인
+        if (!passwdEncoder.matches(passwd, savedPwd)) return ResponseDTO.setFailed("error");
 
         AuthDTO authDto = null;
         try {
@@ -74,13 +70,13 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
             authDto.setName(EXISTED_USER.getName());
             authDto.setRole(EXISTED_USER.getRole());
 
-            int duration = 3600;     // 1h
+            int duration = 3600; // 1h
             String token = jwtProvider.generateToken(email, duration);
 
             authDto.setAccessToken(token);
             authDto.setExpireTime(duration);
 
-            return ResponseDTO.setSuccessData("로그인되었습니다.", authDto);
+            return ResponseDTO.setSuccessData("success", authDto);
 
         } catch (Exception e) {
             return ResponseDTO.setFailed("처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");

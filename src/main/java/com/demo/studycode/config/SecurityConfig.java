@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         (authorizeHttpRequests) -> authorizeHttpRequests
+                                .requestMatchers("/api/check/**").authenticated() // 관리자 관련 모든 요청에 대해 ADMIN 권한만 허용
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // 관리자 관련 모든 요청에 대해 ADMIN 권한만 허용
                                 .requestMatchers("/api/user/**").authenticated() // 일반유저 관련 모든 요청에 대해 승인된 사용자만 허용
                                 .requestMatchers("/**").permitAll() // 모든 경로 대해 모든 사용자 허용
