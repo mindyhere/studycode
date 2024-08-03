@@ -22,4 +22,5 @@ public class UserDTO { // 회원가입 및 로그인에 사용되는 데이터 �
         this.email = email;
         this.passwd = passwd;
     }
+
 }

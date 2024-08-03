@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import "../css/Login.css";
@@ -7,7 +7,7 @@ function LoginPage() {
   const navigate = useNavigate();
   const [join, setJoin] = useState(false);
   const [modal, setModal] = useState(false);
-  const eamil = useRef();
+  const email = useRef();
   const passwd = useRef();
 
   return (
@@ -20,7 +20,7 @@ function LoginPage() {
             <input
               className="input"
               type="text"
-              ref={eamil}
+              ref={email}
               placeholder="이메일을 입력해주세요"
               align="center"
             />
