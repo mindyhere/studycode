@@ -2,11 +2,9 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import "../css/Login.css";
+import { formToJSON } from "axios";
 
-import AuthService from "../services/AuthService";
-import authService from "../services/AuthService";
-
-function LoginPage() {
+function LoginPage_bk() {
   const navigate = useNavigate();
   const [join, setJoin] = useState(false);
   const [modal, setModal] = useState(false);
@@ -49,7 +47,45 @@ function LoginPage() {
       email: email.value,
       passwd: passwd.value,
     };
-    AuthService.setAuthUser(credentials, navigate);
+
+    fetch("http://localhost/api/auth/signIn", {
+      method: "post",
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+      },
+      body: JSON.stringify(credentials),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("false: " + response.status);
+        }
+        localStorage.setItem("accessToken", response);
+        Swal.fire({
+          icon: "success",
+          text: "로그인 되었습니다.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        navigate("/main");
+      })
+      .catch((error) => {
+        console.log("=== 로그인 실패 ===\n" + error);
+        Swal.fire({
+          icon: "warning",
+          title: "잠깐!",
+          html: "아이디/비밀번호를 확인해주세요.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  }
+
+  function findEmail() {
+    Swal.fire({ text: "find email" });
+  }
+
+  function setTemporalPasswd() {
+    Swal.fire({ text: "reset pwd" });
   }
 
   return (
@@ -96,7 +132,7 @@ function LoginPage() {
           <p>
             <a
               onClick={() => {
-                authService.getUserEmail();
+                findEmail()
               }}
             >
               아이디 &nbsp;
@@ -104,7 +140,7 @@ function LoginPage() {
             |
             <a
               onClick={() => {
-                authService.setTemporalPasswd();
+                setTemporalPasswd()
               }}
             >
               &nbsp; 비밀번호 찾기

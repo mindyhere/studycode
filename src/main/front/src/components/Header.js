@@ -1,23 +1,31 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function Header() {
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem("token");
+  const accessToken = localStorage.getItem("accessToken");
   const location = useLocation();
 
-  useEffect(() => {
-    return () => clearTimeout(timerRef.current);
-  }, []);
+  // useEffect(() => {
+  //   return () => clearTimeout(timerRef.current);
+  // }, []);
 
   if (location.pathname === "/") return null; // 로그인페이지에서 헤더 제거
 
-  if (accessToken != null) {
-    // 로그인 성공 시
-    const userIdx = userInfo.h_idx;
-    timeoutAlert("host");
+  if (accessToken == null) {
+    Swal.fire({
+      icon: "error",
+      title: "잠깐!",
+      html: "잘못된 접근입니다.<br/>로그인 후 이용해주세요.",
+      showConfirmButton: false,
+      timer: 2000,
+    }).then(() => {
+      navigate("/");
+    });
+  } else {
+    //   // 로그인 성공 시
 
     return (
       <nav className="navbar navbar-expand-lg">
@@ -35,49 +43,10 @@ function Header() {
           {/* 호스트로그인 후 상단 */}
           <div align="right">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item rounded">
-                <a
-                  className="nav-link active"
-                  onClick={() => navigate(`/api/host/account/${userIdx}`)}
-                >
-                  계정
-                </a>
-              </li>
-              <li className="nav-item rounded">
-                <a
-                  className="nav-link active"
-                  onClick={() => navigate(`/component/Message`)}
-                >
-                  메시지
-                </a>
-              </li>
-              <li className="nav-item rounded">
-                <a
-                  className="nav-link active"
-                  onClick={() => navigate(`/host/hotel/MyhotelList`)}
-                >
-                  호텔
-                </a>
-              </li>
-              <li className="nav-item rounded">
-                <a
-                  className="nav-link active"
-                  onClick={() => navigate(`/api/order/manage/list/${userIdx}`)}
-                >
-                  예약관리
-                </a>
-              </li>
-              <li
-                className="nav-item rounded"
-                style={{ display: "inline-block" }}
-              >
-                <a
-                  className="nav-link active"
-                  onClick={() => navigate("/component/Notice")}
-                >
-                  공지사항
-                </a>
-              </li>
+              <li className="nav-item rounded">HOME</li>
+              <li className="nav-item rounded">계정</li>
+              <li className="nav-item rounded">스터디룸</li>
+              <li className="nav-item rounded">자료실</li>
               <li className="nav-item rounded">
                 <a
                   className="nav-link active"
@@ -92,8 +61,6 @@ function Header() {
                     }).then((result) => {
                       if (result.isConfirmed) {
                         localStorage.clear();
-                        sessionStorage.clear();
-                        removeCookies("host");
                         navigate("/");
                       }
                     });

@@ -4,8 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
 import axios from "axios";
-import MainPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
+import MainPage from "./pages/MainPage";
+import Header from "./components/Header";
 
 // function selectTestData() {
 //     axios.post('/test', ["가", "나", "다"])
@@ -26,12 +27,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/*<header className="App-header">*/}
-        {/*    <img src={logo} className="App-logo" alt="logo"/>*/}
-        {/*    /!*<div>*!/*/}
-        {/*      <button onClick={()=>selectTestData()}>조회</button>*/}
-        {/*    </div>*/}
-        {/*</header>*/}
+        <Header />
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/main" element={<MainPage />} />
