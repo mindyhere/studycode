@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,9 +53,13 @@ public class AuthController {
 
     /* 로그인 API */
     @PostMapping("signIn")
-    public ResponseEntity signIn(@Valid @RequestBody UserDTO request) {
+    public ResponseEntity signIn( @RequestBody Map<String, Object> map) {
+        System.out.println("map: " + map);
 
-        System.out.println("** 이건 콘솔로그: " + request);
+        UserDTO request = new UserDTO();
+        request.setEmail((String) map.get("email"));
+        request.setPasswd(map.get("passwd").toString());
+
         String token = authService.signIn(request);
         return ResponseEntity.status(HttpStatus.OK).body(token);
 

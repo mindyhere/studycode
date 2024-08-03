@@ -1,7 +1,8 @@
-import React, { useRef,useState } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import "../css/Login.css";
+import { formToJSON } from "axios";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -62,28 +63,37 @@ function LoginPage() {
                   passwd.current.focus();
                   return;
                 }
-                const form = new FormData();
-                form.append("email", email.current.value);
-                form.append("passwd", passwd.current.value);
-                fetch("http://localhost/api/auth/signIn/", {
+
+                const credentials = {
+                  email: email.current.value,
+                  passwd: passwd.current.value,
+                };
+
+                fetch("http://localhost/api/auth/signIn", {
                   method: "post",
-                  body: form,
+                  headers: {
+                    "content-type": "application/json;charset=UTF-8",
+                  },
+                  body: JSON.stringify(credentials),
                 })
-                  .then((response) => response.json())
-                  .then((data) => {
-                    console.log("==> data: " + data);
-                    if (data.message == "success") {
-                      console.log("==> 로그인 성공: " + data.data);
-                      navigate("/");
-                    } else {
-                      console.log("==> 로그인 실패: " + data.data);
-                      Swal.fire({
-                        icon: "warning",
-                        title: "잠깐!",
-                        html: "아이디/비밀번호를 확인해주세요.",
-                        confirmButtonText: "OK",
-                      });
+                  .then((response) => {
+                    if (!response.ok) {
+                      throw new Error("false: " + response.status);
                     }
+                    localStorage.setItem("accessToken", response);
+                    Swal.fire({
+                      icon: "success",
+                      text: "로그인 되었습니다.",
+                    });
+                    // navigate("/");
+                  })
+                  .catch((error) => {
+                    console.log("==> 로그인 실패: " + error);
+                    Swal.fire({
+                      icon: "warning",
+                      title: "잠깐!",
+                      html: "아이디/비밀번호를 확인해주세요.",
+                    });
                   });
               }}
               className="btn-sign"
