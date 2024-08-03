@@ -34,7 +34,7 @@ function App() {
         {/*</header>*/}
         <Routes>
           <Route path="/" element={<LoginPage />} />
-          <Route path="/signIn" element={<LoginPage />} />
+          <Route path="/main" element={<MainPage />} />
         </Routes>
       </BrowserRouter>
     </>

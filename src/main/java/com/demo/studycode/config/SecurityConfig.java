@@ -37,25 +37,21 @@ public class SecurityConfig {
         http.csrf((csrf) -> csrf.disable());
         http.cors(Customizer.withDefaults());
 
-        // 세션 관리 상태 없음으로 구성(Spring Security가 세션 생성 or 사용 X)
-        http.sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
         // FormLogin, BasicHttp 비활성화
         // Spring 웹 페이지에서 제공되는 로그인 폼을 통해 사용자를 인증하는 메커니즘과 HTTP 기반 기본 인증을 비활성화
         http.formLogin((form) -> form.disable());
         http.httpBasic(AbstractHttpConfigurer::disable);
 
-        // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
-        http.addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
         // 권한 규칙
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                // 세션 관리 상태 없음으로 구성(Spring Security가 세션 생성 or 사용 X)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
+                .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         (authorizeHttpRequests) -> authorizeHttpRequests
-//                            .requestMatchers("/api/user/**").authenticated() // 일반유저 관련 모든 요청에 대해 승인된 사용자만 허용
-//                            .requestMatchers("/api/auth/**").permitAll() // 모든 경로 대해 모든 사용자 허용
-                                // @PreAuthrization을 사용할 것이기 때문에 모든 경로에 대한 인증처리는 Pass
+                                .requestMatchers("/main/**").authenticated() // 일반유저 관련 모든 요청에 대해 승인된 사용자만 허용
                                 .requestMatchers("/**").permitAll() // 모든 경로 대해 모든 사용자 허용
                                 .anyRequest().permitAll()
                 );
