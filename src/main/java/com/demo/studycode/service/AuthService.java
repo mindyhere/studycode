@@ -69,11 +69,12 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
         Optional<User> user = authRepository.findByEmail(email);
         if (user == null)
             throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
-
+        String savedPwd = user.get().getPasswd();
         // 암호화된 비밀번호를 디코딩한 값과 입력한 값이 다르면 null 반환
-        if (!pwEncoder.matches(passwd, request.getPasswd()))
+        if (!pwEncoder.matches(passwd, savedPwd)) {
+            System.out.println("*** 확인? " + user.get().getPasswd());
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
-
+        }
         AuthDTO dto = modelMapper.map(user, AuthDTO.class);
 
         String accessToken = jwtUtil.createAccessToken(dto);

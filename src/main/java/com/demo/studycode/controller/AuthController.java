@@ -24,7 +24,7 @@ public class AuthController {
     /* 회원가입 API */
     @PostMapping("signUp")
     public ResponseEntity signUp(@RequestBody Map<String, Object> map, @RequestParam(name = "photo", required = false) MultipartFile photo, HttpServletRequest request) {
-//        System.out.println("*** "+ map);
+
         UserDTO dto = new UserDTO();
         dto.setEmail((String) map.get("email"));
         dto.setPasswd(map.get("passwd").toString());
@@ -45,7 +45,6 @@ public class AuthController {
         }
         dto.setProfile(profile);
 
-        System.out.println("!!! "+ dto.getEmail());
         Long id = authService.signUp(dto);
         return ResponseEntity.status(HttpStatus.OK).body(id);
 
