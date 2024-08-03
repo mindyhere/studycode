@@ -1,22 +1,38 @@
 package com.demo.studycode.service;
 
+import com.demo.studycode.dto.AuthDTO;
 import com.demo.studycode.dto.UserDTO;
+import com.demo.studycode.model.User;
+import com.demo.studycode.repository.AuthRepository;
+import com.demo.studycode.repository.UserRepository;
+import com.demo.studycode.security.JwtUtil;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
-public interface AuthService { // 로그인 및 회원가입, 토큰의 만료기간 등에 관여
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Autowired
-//    private AuthRepository authRepository;
-//
-//    @Autowired
-//    private PasswordEncoder passwdEncoder;
-//
-//    @Autowired
-//    private JwtTokenProvider jwtProvider;
+public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간 등에 관여
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthRepository authRepository;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder pwEncoder;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     // 이메일 중복검사
 //    private void testDuplicatedEmail(UserDTO dto) {
@@ -27,41 +43,42 @@ public interface AuthService { // 로그인 및 회원가입, 토큰의 만료�
 //        }
 //    }
 
-    // 회원가입
-    Long signUp(UserDTO dto);
+    @Transactional
+    public Long signUp(UserDTO dto) {
+        System.out.println("333 " + dto);
+        try {
+            // 비밀번호 암호화 -> User entity 생성
+            String encodedPwd = pwEncoder.encode(dto.getPasswd());
+            dto.setPasswd(encodedPwd);
+            User user = modelMapper.map(dto, User.class);
+
+            System.out.println("3-1 " + user + " / " + user.getEmail());
+            // DB에 entity 저장
+            // save() : entity가 존재하는 경우 UPDATE, 존재하지 않는 경우INSERT 실행
+            userRepository.save(user);
+            return user.getId();
+        } catch (Exception e) {
+            throw new RuntimeException("error");
+        }
+    }
 
     // 로그인
-    String signIn(UserDTO request);
-//        String email = dto.getEmail();
-//        String passwd = dto.getPasswd();
-//
-//        final User EXISTED_USER = authRepository.findByEmail(email).orElse(null);
-//        if (EXISTED_USER == null) return ResponseDTO.setFailed("error");
-//
-//        // 암호화되어 DB에 저장된 비밀번호
-//        String savedPwd = EXISTED_USER.getPasswd();
-//        // 입력한 비밀번호와의 일치여부 확인
-//        if (!passwdEncoder.matches(passwd, savedPwd)) return ResponseDTO.setFailed("error");
-//
-//        AuthDTO authDto = null;
-//        try {
-//            authDto.setId(EXISTED_USER.getId());
-//            authDto.setEmail(EXISTED_USER.getEmail());
-//            authDto.setName(EXISTED_USER.getName());
-//            authDto.setRole(EXISTED_USER.getRole());
-//
-//            int duration = 3600; // 1h
-//            String token = jwtProvider.generateToken(email, duration);
-//
-//            authDto.setAccessToken(token);
-//            authDto.setExpireTime(duration);
-//
-//            return ResponseDTO.setSuccessData("success", authDto);
-//
-//        } catch (Exception e) {
-//            return ResponseDTO.setFailed("처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.");
-//        }
-//    }
+    public String signIn(UserDTO request) {
+        String email = request.getEmail();
+        String passwd = request.getPasswd();
+        Optional<User> user = authRepository.findByEmail(email);
+        if (user == null)
+            throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
+
+        // 암호화된 비밀번호를 디코딩한 값과 입력한 값이 다르면 null 반환
+        if (!pwEncoder.matches(passwd, request.getPasswd()))
+            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+
+        AuthDTO dto = modelMapper.map(user, AuthDTO.class);
+
+        String accessToken = jwtUtil.createAccessToken(dto);
+        return accessToken;
+    }
 //
 //    public UserDTO updateToken(UserDTO dto, String refreshToken) {
 //        dto.setToken(refreshToken);

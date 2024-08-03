@@ -1,12 +1,11 @@
 package com.demo.studycode.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class UserDTO { // 회원가입 및 로그인에 사용되는 데이터 객체
 
     private Long id;

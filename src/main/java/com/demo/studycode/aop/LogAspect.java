@@ -26,22 +26,29 @@ public class LogAspect {
 
         // 메서드 정보 받아오기
         Method method = getMethod(joinPoint);
-        log.info("======= method name = {} =======", method.getName());
+        log.info("======= 메서드 정보 = {} =======", method.getName());
 
         // 파라미터 받아오기
         Object[] args = joinPoint.getArgs();
         if (args.length == 0) log.info("no parameter");
+        log.info("==> 파라미터 타입 = {}", args.getClass().getSimpleName());
+        log.info("==> 파라미터 값 = {}", args);
+
         for (Object arg : args) {
-            log.info("==> parameter type = {}", arg.getClass().getSimpleName());
-            log.info("==> parameter value = {}", arg);
+            if (arg == null) {
+                log.info("==> 파라미터 값 = {}", "null");
+            } else {
+                log.info("==> 파라미터 타입 = {}", arg.getClass().getSimpleName());
+                log.info("==> 파라미터 값 = {}", arg);
+            }
         }
 
         // proceed()를 호출하여 실제 메서드 실행
         Object returnObj = joinPoint.proceed();
 
         // 메서드의 리턴값 로깅
-        log.info("==> return type = {}", returnObj.getClass().getSimpleName());
-        log.info("==> return value = {}", returnObj);
+        log.info("==> 리턴 타입 = {}", returnObj.getClass().getSimpleName());
+        log.info("==> 리턴 값 = {}", returnObj);
 
         return returnObj;
     }
