@@ -13,7 +13,7 @@ const setAuthUser = async (credentials, navigate) => {
       },
     });
 
-    localStorage.setItem("accessToken", response.data);
+    localStorage.setItem("token", response.data);
     Swal.fire({
       icon: "success",
       text: "로그인 되었습니다.",

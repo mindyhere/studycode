@@ -9,7 +9,7 @@
     position: absolute;
     width: 100%;
     border-radius: 20px;
-    padding-top: 25px;
+    padding-top: 40px;
     height: 350px;
     top: 400px;
     left: 50%;
@@ -41,8 +41,7 @@
     background: #4e817269;
     color: white;
     font-weight: bold;
-    width: 25%;
-    margin: 0.5rem;
+    width: 30%;
     padding: 10px;
     border-radius: 50px;
     cursor: pointer;

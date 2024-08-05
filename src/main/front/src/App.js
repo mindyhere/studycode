@@ -1,19 +1,11 @@
 import React from "react";
-import { Routes, Route } from "react-router";
+import { Route, Routes } from "react-router";
 import { BrowserRouter } from "react-router-dom";
-import logo from "./logo.svg";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import axios from "axios";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Header from "./components/Header";
-
-// function selectTestData() {
-//     axios.post('/test', ["가", "나", "다"])
-//         .then(function (res) {
-//             console.log(res);
-//         });
-// }
 
 function App() {
   if (process.env.NODE_ENV === "production") {

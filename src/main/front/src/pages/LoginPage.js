@@ -4,7 +4,6 @@ import Swal from "sweetalert2";
 import "../css/Login.css";
 
 import AuthService from "../services/AuthService";
-import authService from "../services/AuthService";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -88,26 +87,31 @@ function LoginPage() {
             >
               Sign In
             </button>
-            <button type="submit" onClick={() => {}} className="btn-main">
-              Sign Up
-            </button>
           </div>
           <br />
           <p>
             <a
               onClick={() => {
-                authService.getUserEmail();
+                AuthService.getUserEmail();
               }}
             >
-              아이디 &nbsp;
+              아이디 찾기&nbsp;
             </a>
             |
             <a
               onClick={() => {
-                authService.setTemporalPasswd();
+                AuthService.setTemporalPasswd();
               }}
             >
-              &nbsp; 비밀번호 찾기
+              &nbsp; 비밀번호 찾기&nbsp;
+            </a>
+            |
+            <a
+              onClick={() => {
+                AuthService.setTemporalPasswd();
+              }}
+            >
+              &nbsp; 회원가입
             </a>
           </p>
         </div>
