@@ -1,0 +1,57 @@
+/* modal창 */
+.modal-container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    z-index: 999;
+}
+
+.modal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(34, 36, 38, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-body {
+    position: absolute;
+    width: 700px;
+    height: 880px;
+    padding: 40px;
+    justify-content: center;
+    text-align: center;
+    z-index: 999 !important;
+    background-color: rgb(255, 255, 255);
+    border-radius: 20px;
+    box-shadow: 0 2px 3px 0 rgba(34, 36, 38, 0.15);
+    /* 스크롤설정 */
+    overflow: hidden;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    /* 인터넷 익스플로러 */
+    scrollbar-width: none;
+}
+
+.modal-body::-webkit-scrollbar {
+    display: none; /* 스크롤설정 : 크롬, 사파리, 오페라, 엣지 */
+}
+
+.btn-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border: none;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: transparent;
+    font-size: 20px;
+    z-index: 999;
+}
+
+.btn-close:hover {
+    cursor: pointer;
+}

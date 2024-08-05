@@ -1,4 +1,4 @@
-/*로그인 화면*/
+/* === 로그인 화면 === */
 .body {
     height: 100vh;
     display: flex;
@@ -34,17 +34,6 @@
 
 .form-field input:focus {
     border-bottom: 1px solid rgba(111, 153, 143, 0.432);
-}
-
-.btn-main {
-    border: none;
-    background: #4e817269;
-    color: white;
-    font-weight: bold;
-    width: 30%;
-    padding: 10px;
-    border-radius: 50px;
-    cursor: pointer;
 }
 
 h2 {

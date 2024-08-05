@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+
+/* === 공통 CSS === */
+/* 기본 버튼 */
+.btn-main {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 30%;
+  padding: 10px;
+  font-weight: bold;
+  line-height: 24px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.4s ease-in-out;
+  border: 1px solid transparent;
+  overflow: hidden;
+  background: #4e817269;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}

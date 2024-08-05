@@ -2,15 +2,19 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import "../css/Login.css";
+import JoinModal from "./JoinModal";
 
 import AuthService from "../services/AuthService";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [join, setJoin] = useState(false);
-  const [modal, setModal] = useState(false);
   const email = useRef();
   const passwd = useRef();
+  const [join, setJoin] = useState(false);
+  // const handleModal = (show) => {
+  //   console.log("호출테스트");
+  //   show ? setShow(false) : setShow(true);
+  // };
 
   function signIn(email, passwd) {
     console.log(email.value + "\n" + passwd.value);
@@ -108,7 +112,8 @@ function LoginPage() {
             |
             <a
               onClick={() => {
-                AuthService.setTemporalPasswd();
+                console.log("==test==");
+                setJoin(true);
               }}
             >
               &nbsp; 회원가입
@@ -116,6 +121,7 @@ function LoginPage() {
           </p>
         </div>
       </div>
+      <JoinModal show={join} onHide={() => setJoin(false)} />
     </>
   );
 }
