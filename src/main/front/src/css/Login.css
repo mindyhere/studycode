@@ -20,7 +20,7 @@
 .form-field {
     display: flex;
     flex-flow: column wrap;
-    width: 60%;
+    width: 100%;
 }
 
 .form-field input {
@@ -32,9 +32,11 @@
     transition: border-bottom 0.1s ease-in-out 0.1s;
 }
 
-.form-field input:focus {
-    border-bottom: 1px solid rgba(111, 153, 143, 0.432);
-}
+/*.form-field input[type="file"] {*/
+/*    border: none;*/
+/*    border: 1px solid rgba(116, 116, 116, 0.44);*/
+/*    outline: none;*/
+/*}*/
 
 h2 {
     color: #4e817269;

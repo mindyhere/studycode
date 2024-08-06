@@ -61,7 +61,7 @@ function LoginPage() {
         <div className="organize-form form-area-signin">
           <h2 align="center">Studycode</h2>
           <br />
-          <div className="form-field">
+          <div className="form-field" style={{width:"60%"}}>
             <input
               className="input"
               type="text"
@@ -71,7 +71,7 @@ function LoginPage() {
             />
           </div>
           <br />
-          <div className="form-field">
+          <div className="form-field" style={{width:"60%"}}>
             <input
               className="input"
               type="password"
@@ -99,7 +99,7 @@ function LoginPage() {
                 AuthService.getUserEmail();
               }}
             >
-              아이디 찾기&nbsp;
+              아이디 찾기&nbsp;&nbsp;
             </a>
             |
             <a
@@ -107,7 +107,7 @@ function LoginPage() {
                 AuthService.setTemporalPasswd();
               }}
             >
-              &nbsp; 비밀번호 찾기&nbsp;
+              &nbsp; 비밀번호 찾기&nbsp;&nbsp;
             </a>
             |
             <a
