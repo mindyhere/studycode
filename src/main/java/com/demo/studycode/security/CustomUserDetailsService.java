@@ -1,9 +1,7 @@
 package com.demo.studycode.security;
 
-import com.demo.studycode.dto.AuthDTO;
 import com.demo.studycode.dto.UserDTO;
 import com.demo.studycode.model.User;
-import com.demo.studycode.repository.AuthRepository;
 import com.demo.studycode.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,11 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private AuthRepository authRepository;
+    private UserRepository userRepository;
 
     @Override
     public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user =  this.authRepository.findByEmail(email);
+        Optional<User> user = this.userRepository.findByEmail(email);
         UserDTO dto = modelMapper.map(user, UserDTO.class);
         return new CustomUserDetails(dto);
     }

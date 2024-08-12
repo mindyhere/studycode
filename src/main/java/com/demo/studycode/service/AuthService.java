@@ -4,7 +4,6 @@ import com.demo.studycode.dto.AuthDTO;
 import com.demo.studycode.dto.MailDTO;
 import com.demo.studycode.dto.UserDTO;
 import com.demo.studycode.model.User;
-import com.demo.studycode.repository.AuthRepository;
 import com.demo.studycode.repository.UserRepository;
 import com.demo.studycode.security.JwtUtil;
 import org.modelmapper.ModelMapper;
@@ -24,9 +23,6 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     private UserRepository userRepository;
 
     @Autowired
-    private AuthRepository authRepository;
-
-    @Autowired
     private MailService mailService;
 
     @Autowired
@@ -41,7 +37,7 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
 
     // 이메일 유효성 검사
     public String checkUserEmail(String userEmail) {
-        User existedUser = authRepository.findByEmail(userEmail).orElse(null);
+        User existedUser = userRepository.findByEmail(userEmail).orElse(null);
         if (existedUser != null) throw new IllegalStateException("fail");
 
         // 인증 코드를 발송해 사용 중인 이메일인지 확인
@@ -54,7 +50,7 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     }
 
     @Transactional
-    public Long signUp(UserDTO dto) {
+    public void signUp(UserDTO dto) {
         System.out.println("333 " + dto);
         try {
             // 비밀번호 암호화 -> User entity 생성
@@ -64,9 +60,8 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
 
             System.out.println("3-1 " + user + " / " + user.getEmail());
             // DB에 entity 저장
-            // save() : entity가 존재하는 경우 UPDATE, 존재하지 않는 경우INSERT 실행
+            // save() : entity가 존재하는 경우 UPDATE, 존재하지 않는 경우 INSERT 실행
             userRepository.save(user);
-            return user.getId();
         } catch (Exception e) {
             throw new RuntimeException("error");
         }
@@ -76,7 +71,7 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     public String signIn(UserDTO request) {
         String email = request.getEmail();
         String passwd = request.getPasswd();
-        Optional<User> user = authRepository.findByEmail(email);
+        Optional<User> user = userRepository.findByEmail(email);
         if (user == null)
             throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
         String savedPwd = user.get().getPasswd();

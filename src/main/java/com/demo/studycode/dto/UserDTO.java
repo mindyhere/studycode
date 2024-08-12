@@ -17,9 +17,9 @@ public class UserDTO { // 회원가입 및 로그인에 사용되는 데이터 �
     private String role;
     private String token;
 
+
     public UserDTO(String email, String passwd) {
         this.email = email;
         this.passwd = passwd;
     }
-
 }

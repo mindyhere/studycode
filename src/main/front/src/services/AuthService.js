@@ -18,7 +18,7 @@ const setAuthUser = async (credentials, navigate) => {
       icon: "success",
       text: "로그인 되었습니다.",
       showConfirmButton: false,
-      timer: 1500,
+      timer: 2500,
     });
     navigate("/main");
   } catch (error) {
@@ -28,7 +28,7 @@ const setAuthUser = async (credentials, navigate) => {
       title: "잠깐!",
       html: "아이디/비밀번호를 확인해주세요.",
       showConfirmButton: false,
-      timer: 1500,
+      timer: 2500,
     });
   }
 };
@@ -48,39 +48,28 @@ const setTemporalCode = async (email) => {
     .get(`${API_URL}/check/${email}`)
     .then((response) => {
       console.log("=== 결과 ===\n" + response.data);
-
-      if (response.status !== 200) {
-        Swal.fire({
-          icon: "warning",
-          title: "잠깐!",
-          html: response.data,
-          showConfirmButton: false,
-          timer: 2000,
-        });
-      }
       localStorage.setItem("tempCode", response.data);
+
       Swal.fire({
         icon: "info",
         html: "인증코드를 발송했습니다.<br/>이메일 확인 후 코드를 입력해주시기 바랍니다.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
     })
     .catch((error) => {
       console.error("=== 발송 실패 ===\n", error);
 
       Swal.fire({
-        icon: "error",
+        icon: "warning",
         title: "잠깐!",
-        html: "처리 중 문제가 발생했습니다.<br/>잠시 후 다시 이용해주시기 바랍니다.",
-        showConfirmButton: false,
-        timer: 2000,
+        html: error.response.data,
       });
     });
 };
 
 const createUser = async (form) => {
-  console.log("== 호출확인 ==\n"+form.stringify);
+  console.log("== 호출확인 ==\n" + form.stringify);
   try {
     const response = await axios
       .post(`${API_URL}/signUp`, form, {

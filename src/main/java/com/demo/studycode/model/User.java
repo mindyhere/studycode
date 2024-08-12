@@ -23,6 +23,7 @@ public class User { // 유저 정보 저장 용도
     @Column(length = 100)
     private String passwd;
 
+    @NotNull
     @Column(length = 50)
     private String name;
 

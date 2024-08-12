@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import "../css/Login.css";
 import JoinModal from "./JoinModal";
+import FindAccountModal from "./FindAccountModal";
 
 import AuthService from "../services/AuthService";
 
@@ -11,10 +12,8 @@ function LoginPage() {
   const email = useRef();
   const passwd = useRef();
   const [join, setJoin] = useState(false);
-  // const handleModal = (show) => {
-  //   console.log("호출테스트");
-  //   show ? setShow(false) : setShow(true);
-  // };
+  const [findAcc, setFindAcc] = useState(false);
+  const [option, setOption] = useState("");
 
   function signIn(email, passwd) {
     console.log(email.value + "\n" + passwd.value);
@@ -61,7 +60,7 @@ function LoginPage() {
         <div className="organize-form form-area-signin">
           <h2 align="center">Studycode</h2>
           <br />
-          <div className="form-field" style={{width:"60%"}}>
+          <div className="form-field" style={{ width: "60%" }}>
             <input
               className="input"
               type="text"
@@ -71,7 +70,7 @@ function LoginPage() {
             />
           </div>
           <br />
-          <div className="form-field" style={{width:"60%"}}>
+          <div className="form-field" style={{ width: "60%" }}>
             <input
               className="input"
               type="password"
@@ -95,7 +94,8 @@ function LoginPage() {
           <p>
             <a
               onClick={() => {
-                AuthService.getUserEmail();
+                setOption("email");
+                setFindAcc(true);
               }}
             >
               아이디 찾기&nbsp;&nbsp;
@@ -103,7 +103,8 @@ function LoginPage() {
             |
             <a
               onClick={() => {
-                AuthService.setTemporalPasswd();
+                setOption("passwd");
+                setFindAcc(true);
               }}
             >
               &nbsp; 비밀번호 찾기&nbsp;&nbsp;
@@ -120,6 +121,11 @@ function LoginPage() {
         </div>
       </div>
       <JoinModal show={join} onHide={() => setJoin(false)} />
+      <FindAccountModal
+        opt={option}
+        show={findAcc}
+        onHide={() => setFindAcc(false)}
+      />
     </>
   );
 }

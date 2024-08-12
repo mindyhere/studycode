@@ -9,7 +9,6 @@ import "../css/Login.css";
 function JoinModal(props) {
   const [email, setEmail] = useState("");
   const emailRef = useRef();
-  // const [confirmCode, setConfirmCode] = useState("");
   const confirmCode = useRef();
   const passwd = useRef();
   const pwCheck = useRef();
@@ -17,8 +16,6 @@ function JoinModal(props) {
   const [phone, setPhoneNum] = useState("");
   const phoneNum = useRef();
   const profile = useRef();
-  const [chkdId, setChkdId] = useState("");
-  const emailChk = useRef();
   const [active, setActive] = useState(false);
 
   const handleRegex = (val, type) => {
@@ -39,15 +36,7 @@ function JoinModal(props) {
     }
   };
 
-  const checkRequired = (emailInput, pwdInput, phoneInput) => {
-    console.log(
-      "== 확인 ==\n" +
-        emailInput.value +
-        "\n" +
-        pwdInput.value +
-        "\n" +
-        phoneInput.value,
-    );
+  const checkRequired = () => {
     // 아이디(이메일) 유효성 검증
     if (!active) {
       Swal.fire({
@@ -73,7 +62,7 @@ function JoinModal(props) {
     }
 
     // 비밀번호 입력 확인
-    if (pwdInput.value == "") {
+    if (passwd.current.value == "") {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
@@ -83,7 +72,7 @@ function JoinModal(props) {
       });
       return;
     } else {
-      if (pwdInput.value !== pwCheck.current.value) {
+      if (passwd.current.value !== pwCheck.current.value) {
         Swal.fire({
           icon: "warning",
           title: "잠깐!",
@@ -95,7 +84,18 @@ function JoinModal(props) {
       }
     }
 
-    if (phoneInput.value == "" || phoneInput.value.length < 13) {
+    if (name.current.value == "") {
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: "이름을 입력해주세요.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    }
+
+    if (phoneNum.current.value == "" || phoneNum.current.value.length < 13) {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
@@ -113,11 +113,10 @@ function JoinModal(props) {
     form.append("passwd", passwd.current.value);
     form.append("name", name.current.value);
     form.append("phone", phoneNum.current.value);
-
     if (profile.current.files.length > 0) {
       form.append("photo", profile.current.files[0]);
     }
-    console.log("== 호출확인111 ==\n"+form);
+    console.log("== 호출확인111 ==\n" + form);
     AuthService.createUser(form);
   }
 
@@ -220,7 +219,7 @@ function JoinModal(props) {
                     </tr>
 
                     <tr>
-                      <td>&nbsp;&nbsp;이름</td>
+                      <td>*이름</td>
                       <td colSpan={2}>
                         <input
                           className="input"
@@ -268,20 +267,18 @@ function JoinModal(props) {
               </div>
             </div>
           </div>
+
+          <div className="col m-2 pt-3" align="right">
+            <button
+              className={"btn-main"}
+              onClick={() => {
+                checkRequired();
+              }}
+            >
+              Sign Up
+            </button>
+          </div>
         </Modal.Body>
-        <Modal.Footer>
-          <button
-            className={"btn-main"}
-            onClick={() => {
-              checkRequired(emailRef.current, passwd.current, phoneNum.current);
-              //signUp();
-              // .then(window.location.reload());
-              // window.location.reload();
-            }}
-          >
-            Sign Up
-          </button>
-        </Modal.Footer>
       </Modal>
     </>
   );
