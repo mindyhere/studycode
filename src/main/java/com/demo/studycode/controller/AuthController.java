@@ -24,7 +24,7 @@ public class AuthController {
 
     /* 회원가입 API */
     @PostMapping("signUp")
-    public ResponseEntity signUp(@RequestBody Map<String, Object> map, @RequestParam(name = "photo", required = false) MultipartFile photo, HttpServletRequest request) {
+    public ResponseEntity signUp(@RequestParam Map<String, Object> map, @RequestParam(name = "photo", required = false) MultipartFile photo, HttpServletRequest request) {
 
         UserDTO dto = new UserDTO();
         dto.setEmail((String) map.get("email"));
@@ -32,14 +32,15 @@ public class AuthController {
         dto.setName(map.get("name").toString());
         dto.setPhone(map.get("phone").toString());
 
-        ServletContext application = request.getSession().getServletContext();
-        String path = application.getRealPath("static/images/");
+//        ServletContext application = request.getSession().getServletContext();
+//        String path = application.getRealPath("/static/images/");
+        String UPLOAD_PATH = "/Users/9suaveee/miindy/work/studycode/src/main/resources/static/images/";
         String profile = "-";
 
         if (photo != null && !photo.isEmpty()) {
             try {
                 profile = photo.getOriginalFilename();
-                photo.transferTo(new File(path + profile));
+                photo.transferTo(new File(UPLOAD_PATH + profile));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -65,16 +66,19 @@ public class AuthController {
 
     }
 
-//
+    //
     @GetMapping("check/{email}")
     public ResponseEntity signIn(@PathVariable(name = "email") String userEmail) {
         System.out.println("userEmail: " + userEmail);
-
-        String result = authService.checkUserEmail(userEmail);
-        if (!(result.equals("success"))) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
-        } else {
+        try {
+            String result = authService.checkUserEmail(userEmail);
+            System.out.println(result);
+            if ((result.equals("fail"))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("인증코드 발송에 실패했습니다.");
+            }
             return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 사용 중인 이메일입니다.");
         }
     }
 

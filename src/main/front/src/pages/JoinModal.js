@@ -1,15 +1,16 @@
 import React, { useRef, useState } from "react";
-import "../css/Login.css";
+import Swal from "sweetalert2";
 import Modal from "react-bootstrap/Modal";
 import { PersonVcard } from "react-bootstrap-icons";
 
 import AuthService from "../services/AuthService";
+import "../css/Login.css";
 
 function JoinModal(props) {
   const [email, setEmail] = useState("");
   const emailRef = useRef();
-  const [confirmCode, setConfirmCode] = useState("");
-  const confirmCodeRef = useRef();
+  // const [confirmCode, setConfirmCode] = useState("");
+  const confirmCode = useRef();
   const passwd = useRef();
   const pwCheck = useRef();
   const name = useRef();
@@ -38,6 +39,88 @@ function JoinModal(props) {
     }
   };
 
+  const checkRequired = (emailInput, pwdInput, phoneInput) => {
+    console.log(
+      "== 확인 ==\n" +
+        emailInput.value +
+        "\n" +
+        pwdInput.value +
+        "\n" +
+        phoneInput.value,
+    );
+    // 아이디(이메일) 유효성 검증
+    if (!active) {
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: "이메일을 확인해주세요.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    } else {
+      let tempCode = localStorage.getItem("tempCode");
+      if (confirmCode.current.value != tempCode) {
+        Swal.fire({
+          icon: "warning",
+          title: "잠깐!",
+          html: "이메일 인증코드를 확인해주세요.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
+    }
+
+    // 비밀번호 입력 확인
+    if (pwdInput.value == "") {
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: "비밀번호를 입력해주세요.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+      return;
+    } else {
+      if (pwdInput.value !== pwCheck.current.value) {
+        Swal.fire({
+          icon: "warning",
+          title: "잠깐!",
+          html: "비밀번호가 일치하지 않습니다.",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        return;
+      }
+    }
+
+    if (phoneInput.value == "" || phoneInput.value.length < 13) {
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: "전화번호를 확인해주세요.",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+    signUp();
+  };
+
+  function signUp() {
+    const form = new FormData();
+    form.append("email", emailRef.current.value);
+    form.append("passwd", passwd.current.value);
+    form.append("name", name.current.value);
+    form.append("phone", phoneNum.current.value);
+
+    if (profile.current.files.length > 0) {
+      form.append("photo", profile.current.files[0]);
+    }
+    console.log("== 호출확인111 ==\n"+form);
+    AuthService.createUser(form);
+  }
+
   return (
     <>
       <Modal
@@ -63,7 +146,6 @@ function JoinModal(props) {
                     <tr>
                       <td rowSpan={2}>*이메일</td>
                       <td>
-                        :
                         <input
                           className="input"
                           type="email"
@@ -82,9 +164,12 @@ function JoinModal(props) {
                       <td rowSpan={2}>
                         <button
                           type="button"
-                          className={
-                            "btn-check " + (active ? "active" : "disabled")
-                          }
+                          className={"btn-main" + (active ? "" : " disabled")}
+                          style={{
+                            width: "80px",
+                            lineHeight: "13px",
+                            fontSize: "12px",
+                          }}
                           disabled={active ? false : true}
                           onClick={() => {
                             console.log("active 클릭");
@@ -97,24 +182,20 @@ function JoinModal(props) {
                     </tr>
                     <tr>
                       <td>
-                        :
                         <input
                           className="input"
                           type="text"
-                          ref={confirmCodeRef}
+                          ref={confirmCode}
                           placeholder="이메일 인증코드를 확인해주세요."
                           align="center"
                           style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
-                  </tbody>
-                  <br />
-                  <tbody>
+
                     <tr>
                       <td rowSpan={2}>*비밀번호</td>
                       <td colSpan={2}>
-                        :
                         <input
                           className="input"
                           type="password"
@@ -125,10 +206,8 @@ function JoinModal(props) {
                         />
                       </td>
                     </tr>
-
                     <tr>
                       <td colSpan={2}>
-                        :
                         <input
                           className="input"
                           type="password"
@@ -139,13 +218,10 @@ function JoinModal(props) {
                         />
                       </td>
                     </tr>
-                  </tbody>
-                  <br />
-                  <tbody>
+
                     <tr>
                       <td>&nbsp;&nbsp;이름</td>
                       <td colSpan={2}>
-                        :
                         <input
                           className="input"
                           type="text"
@@ -156,13 +232,10 @@ function JoinModal(props) {
                         />
                       </td>
                     </tr>
-                  </tbody>
-                  <br />
-                  <tbody>
+
                     <tr>
                       <td>*전화번호</td>
                       <td colSpan={2}>
-                        :
                         <input
                           className="input"
                           type="text"
@@ -178,9 +251,7 @@ function JoinModal(props) {
                         />
                       </td>
                     </tr>
-                  </tbody>
-                  <br />
-                  <tbody>
+
                     <tr>
                       <td>&nbsp;&nbsp;프로필</td>
                       <td colSpan={2}>
@@ -202,7 +273,10 @@ function JoinModal(props) {
           <button
             className={"btn-main"}
             onClick={() => {
-              window.location.reload();
+              checkRequired(emailRef.current, passwd.current, phoneNum.current);
+              //signUp();
+              // .then(window.location.reload());
+              // window.location.reload();
             }}
           >
             Sign Up

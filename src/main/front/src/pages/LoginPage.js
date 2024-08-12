@@ -83,7 +83,6 @@ function LoginPage() {
           <br />
           <div colSpan="2" align="center">
             <button
-              type="submit"
               onClick={() => {
                 signIn(email.current, passwd.current);
               }}
@@ -112,7 +111,6 @@ function LoginPage() {
             |
             <a
               onClick={() => {
-                console.log("==test==");
                 setJoin(true);
               }}
             >

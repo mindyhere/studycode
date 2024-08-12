@@ -39,7 +39,7 @@
 
 /* === 공통 CSS === */
 /* 기본 버튼 */
-.btn-main {
+.btn-main{
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -68,41 +68,38 @@
     overflow: hidden;
 }
 
-/* 활성/비활성 토글버튼 */
-.btn-check.disabled {
+.swal2-confirm {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     text-align: center;
-    padding: 8px;
+    white-space: nowrap;
+    vertical-align: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    width: 80px;
+    padding: 10px;
     font-weight: bold;
-    font-size: 12px;
-    line-height: 13px;
+    line-height: 24px;
+    border: none;
     border-radius: 30px;
     cursor: pointer;
+    z-index: 5;
     transition: all 0.4s ease-in-out;
     border: 1px solid transparent;
-    background: #8C7E9E;
-    color: #ffffff;
-    position: relative;
-}
-
-.btn-check.active {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-    padding: 8px;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 13px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: all 0.4s ease-in-out;
-    border: 1px solid transparent;
+    overflow: hidden;
     background: #4e817269;
     color: white;
     position: relative;
+    overflow: hidden;
+}
+
+/* 활성/비활성 토글버튼 */
+.btn-main.disabled {
+    transition: all 0.4s ease-in-out;
+    background: #8C7E9E;
+    color: white;
 }

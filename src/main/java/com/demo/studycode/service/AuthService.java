@@ -42,13 +42,13 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     // 이메일 유효성 검사
     public String checkUserEmail(String userEmail) {
         User existedUser = authRepository.findByEmail(userEmail).orElse(null);
-        if (existedUser != null) throw new IllegalStateException("이미 사용 중인 이메일입니다.");
+        if (existedUser != null) throw new IllegalStateException("fail");
 
         // 인증 코드를 발송해 사용 중인 이메일인지 확인
         String tempCode = mailService.getTempCode();
         MailDTO mailDto = mailService.setTempCodeEmail(userEmail, tempCode);
         String result = mailService.sendEmail(mailDto);
-        if (result.equals("fail")) return "인증코드 발송에 실패했습니다.<br/>잠시 후 다시 이용해주세요.";
+        if (result.equals("fail")) return result;
 
         return tempCode;
     }

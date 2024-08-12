@@ -44,32 +44,76 @@ const setTemporalPasswd = async (id) => {
 };
 
 const setTemporalCode = async (email) => {
-  const response = await axios.get(`${API_URL}/check/${email}`);
-  if (response.status !== 200) {
-    console.error("=== 발송 실패 ===\n", response);
-    Swal.fire({
-      icon: "error",
-      html: response.data,
-      showConfirmButton: false,
-      timer: 1500,
+  await axios
+    .get(`${API_URL}/check/${email}`)
+    .then((response) => {
+      console.log("=== 결과 ===\n" + response.data);
+
+      if (response.status !== 200) {
+        Swal.fire({
+          icon: "warning",
+          title: "잠깐!",
+          html: response.data,
+          showConfirmButton: false,
+          timer: 2000,
+        });
+      }
+      localStorage.setItem("tempCode", response.data);
+      Swal.fire({
+        icon: "info",
+        html: "인증코드를 발송했습니다.<br/>이메일 확인 후 코드를 입력해주시기 바랍니다.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
+    })
+    .catch((error) => {
+      console.error("=== 발송 실패 ===\n", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "잠깐!",
+        html: "처리 중 문제가 발생했습니다.<br/>잠시 후 다시 이용해주시기 바랍니다.",
+        showConfirmButton: false,
+        timer: 2000,
+      });
     });
-  } else {
-    Swal.fire({
-      icon: "info",
-      html: "인증코드를 발송했습니다.<br/>이메일 확인 후 코드를 입력해주시기 바랍니다.",
-      showConfirmButton: false,
-      timer: 1500,
-    });
-  }
-  console.log("=== 확인코드 ===\n" + response.data);
-  localStorage.setItem("tempCode", response.data);
 };
 
-const createUser = (userDto) => axios.put(`${API_URL}/signUp`, userDto);
+const createUser = async (form) => {
+  console.log("== 호출확인 ==\n"+form.stringify);
+  try {
+    const response = await axios
+      .post(`${API_URL}/signUp`, form, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          text: "회원가입이 완료되었습니다.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        localStorage.removeItem("tempCode");
+        window.location.reload();
+      });
+  } catch (error) {
+    console.error("=== 로그인 실패 ===\n", error);
+    Swal.fire({
+      icon: "error",
+      title: "잠깐!",
+      html: "처리 중 문제가 발생했습니다.<br>잠시 후 다시 시도해주시기 바랍니다.",
+      showConfirmButton: false,
+      timer: 2000,
+    });
+  }
+};
 
 export default {
   setAuthUser,
   getUserEmail,
   setTemporalPasswd,
+  setTemporalCode,
   createUser,
 };

@@ -27,7 +27,7 @@ public class User { // 유저 정보 저장 용도
     private String name;
 
     @NotNull
-    @Column(length = 11)
+    @Column(length = 13)
     private String phone;
 
     @Column

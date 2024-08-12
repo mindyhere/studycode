@@ -59,7 +59,7 @@ public class MailService {
 
         MailDTO mail = new MailDTO();
         mail.setSubject("[Studycode] 이메일 인증 안내");
-        mail.setMessage("이메일 인증요청 확인코드가 발급되었습니다.<br/>인증코드 입력 후 회원가입 절차를 완료해주세요.<br/>CODE : " + tempCode);
+        mail.setMessage("이메일 인증요청 확인코드가 발급되었습니다.\n인증코드 입력 후 회원가입 절차를 완료해주세요.\n\n\rCODE : " + tempCode);
         mail.setRecipient(email);
         mail.setSenderName("Notice");
         mail.setSender("notice@gmail.com");
