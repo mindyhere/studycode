@@ -43,6 +43,28 @@ const setTemporalPasswd = async (id) => {
   // axios.post(API_URL, study);
 };
 
+const setTemporalCode = async (email) => {
+  const response = await axios.get(`${API_URL}/check/${email}`);
+  if (response.status !== 200) {
+    console.error("=== 발송 실패 ===\n", response);
+    Swal.fire({
+      icon: "error",
+      html: response.data,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  } else {
+    Swal.fire({
+      icon: "info",
+      html: "인증코드를 발송했습니다.<br/>이메일 확인 후 코드를 입력해주시기 바랍니다.",
+      showConfirmButton: false,
+      timer: 1500,
+    });
+  }
+  console.log("=== 확인코드 ===\n" + response.data);
+  localStorage.setItem("tempCode", response.data);
+};
+
 const createUser = (userDto) => axios.put(`${API_URL}/signUp`, userDto);
 
 export default {

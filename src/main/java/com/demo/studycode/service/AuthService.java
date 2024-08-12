@@ -1,6 +1,7 @@
 package com.demo.studycode.service;
 
 import com.demo.studycode.dto.AuthDTO;
+import com.demo.studycode.dto.MailDTO;
 import com.demo.studycode.dto.UserDTO;
 import com.demo.studycode.model.User;
 import com.demo.studycode.repository.AuthRepository;
@@ -26,6 +27,9 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     private AuthRepository authRepository;
 
     @Autowired
+    private MailService mailService;
+
+    @Autowired
     JwtUtil jwtUtil;
 
     @Autowired
@@ -34,14 +38,20 @@ public class AuthService { // 로그인 및 회원가입, 토큰의 만료기간
     @Autowired
     private ModelMapper modelMapper;
 
-    // 이메일 중복검사
-//    private void testDuplicatedEmail(UserDTO dto) {
-//        String email = dto.getEmail();
-//        User existedUser = authRepository.findByEmail(email).orElse(null);
-//        if (existedUser != null) {
-//            throw new IllegalStateException("이미 존재하는 회원입니다.");
-//        }
-//    }
+
+    // 이메일 유효성 검사
+    public String checkUserEmail(String userEmail) {
+        User existedUser = authRepository.findByEmail(userEmail).orElse(null);
+        if (existedUser != null) throw new IllegalStateException("이미 사용 중인 이메일입니다.");
+
+        // 인증 코드를 발송해 사용 중인 이메일인지 확인
+        String tempCode = mailService.getTempCode();
+        MailDTO mailDto = mailService.setTempCodeEmail(userEmail, tempCode);
+        String result = mailService.sendEmail(mailDto);
+        if (result.equals("fail")) return "인증코드 발송에 실패했습니다.<br/>잠시 후 다시 이용해주세요.";
+
+        return tempCode;
+    }
 
     @Transactional
     public Long signUp(UserDTO dto) {

@@ -53,7 +53,7 @@ public class AuthController {
 
     /* 로그인 API */
     @PostMapping("signIn")
-    public ResponseEntity signIn( @RequestBody Map<String, Object> map) {
+    public ResponseEntity signIn(@RequestBody Map<String, Object> map) {
         System.out.println("map: " + map);
 
         UserDTO request = new UserDTO();
@@ -63,6 +63,19 @@ public class AuthController {
         String token = authService.signIn(request);
         return ResponseEntity.status(HttpStatus.OK).body(token);
 
+    }
+
+//
+    @GetMapping("check/{email}")
+    public ResponseEntity signIn(@PathVariable(name = "email") String userEmail) {
+        System.out.println("userEmail: " + userEmail);
+
+        String result = authService.checkUserEmail(userEmail);
+        if (!(result.equals("success"))) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
     }
 
 }

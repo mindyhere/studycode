@@ -75,26 +75,17 @@
     justify-content: center;
     gap: 10px;
     text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     padding: 8px;
     font-weight: bold;
     font-size: 12px;
     line-height: 13px;
     border-radius: 30px;
     cursor: pointer;
-    z-index: 5;
     transition: all 0.4s ease-in-out;
     border: 1px solid transparent;
-    overflow: hidden;
     background: #8C7E9E;
     color: #ffffff;
     position: relative;
-    overflow: hidden;
 }
 
 .btn-check.active {
@@ -103,24 +94,15 @@
     justify-content: center;
     gap: 10px;
     text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     padding: 8px;
     font-weight: bold;
     font-size: 12px;
     line-height: 13px;
     border-radius: 30px;
     cursor: pointer;
-    z-index: 5;
     transition: all 0.4s ease-in-out;
     border: 1px solid transparent;
-    overflow: hidden;
     background: #4e817269;
     color: white;
     position: relative;
-    overflow: hidden;
 }
