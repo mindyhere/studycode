@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "tb_user")
 @Getter
@@ -39,6 +42,14 @@ public class User { // 유저 정보 저장 용도
 
     @Column
     private String token;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    List<Study> studyList = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    List<Study> applyList = new ArrayList<>();
 
     @Builder
     public User(Long id, String email, String name, String role) {
