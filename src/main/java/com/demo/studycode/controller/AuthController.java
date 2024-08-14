@@ -96,14 +96,14 @@ public class AuthController {
             String result = userService.findUserEmail(name, phone);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("처리 중 문제가 발생했습니다.");
         }
     }
 
     /* 비밀번호 찾기 API - 임시 비밀번호 발송 */
     @PostMapping("find/{email}")
-    public ResponseEntity resetPasswd(@PathVariable(name = "email") String email, @RequestParam Map<String, Object> map) {
-
+    public ResponseEntity resetPasswd(@PathVariable(name = "email") String email, @RequestBody Map<String, Object> map) {
+        System.out.println(map);
         try {
             String result = userService.resetPasswd(map);
 

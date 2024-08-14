@@ -33,14 +33,63 @@ const setAuthUser = async (credentials, navigate) => {
   }
 };
 
-const getUserEmail = async (id) => {
-  Swal.fire({ text: "find email" });
-  // const response = await axios.get(`${API_URL}/find/${id}`);
+const getUserEmail = async (name, phone) => {
+  await axios
+    .get(`${API_URL}/find/${name}/${phone}`)
+    .then((response) => {
+      console.log("=== 결과 ===\n" + response.data);
+      if (response.data == "fail")
+        throw new Error("일치하는 회원 정보가 없습니다.");
+
+      Swal.fire({
+        icon: "success",
+        html: `<strong>${name}</strong> 님의 이메일은 <strong>${response.data}</strong> 입니다.`,
+        confirmButtonText: "OK",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return;
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("=== 발송 실패 ===\n", error);
+
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: error,
+      });
+    });
 };
 
-const setTemporalPasswd = async (id) => {
-  Swal.fire({ text: "reset pwd" });
-  // axios.post(API_URL, study);
+const setTemporalPasswd = async (email, form) => {
+  try {
+    const response = await axios
+      .post(`${API_URL}/find/${email}`, form, {
+        headers: {
+          "Content-Type": "application/json;charset=UTF-8",
+        },
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "info",
+          html: `등록된 이메일로 임시 비밀번호를 발송했습니다.<br/>로그인 후 비밀번호를 변경해주시기 바랍니다.`,
+          confirmButtonText: "OK",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            return;
+          }
+        });
+      });
+  } catch (error) {
+    console.error("=== 요청 실패 ===\n", error);
+    Swal.fire({
+      icon: "warning",
+      title: "잠깐!",
+      html: `사용자를 찾을 수 없습니다.<br/>입력하신 내용을 확인해주시기 바랍니다.`,
+      confirmButtonText: "OK",
+    });
+  }
 };
 
 const setTemporalCode = async (email) => {

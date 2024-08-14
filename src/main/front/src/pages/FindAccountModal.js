@@ -7,34 +7,32 @@ import AuthService from "../services/AuthService";
 import "../css/Login.css";
 
 function FindAccountModal(props) {
-  const [email, setEmail] = useState("");
-  const emailRef = useRef();
+  const email = useRef();
   const name = useRef();
   const [phone, setPhoneNum] = useState("");
   const phoneNum = useRef();
-  const [active, setActive] = useState(false);
 
-  const handleRegex = (val, type) => {
+  const handlePhoneNum = (val) => {
     const phoneRegex = /^[0-9\b -]{0,13}$/;
-    const emailRegex =
-      /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
-    switch (type) {
-      case "email":
-        emailRegex.test(val) ? setActive(true) : setActive(false);
-        break;
-      case "phone":
-        if (phoneRegex.test(val)) {
-          setPhoneNum(
-            val.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
-          );
-        }
-        break;
+
+    if (phoneRegex.test(val)) {
+      setPhoneNum(
+        val.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
+      );
     }
   };
 
-  const checkRequired = () => {
+  const handleReset = () => {
+    if (props.opt == "passwd") email.current.value = "";
+    setPhoneNum("");
+    name.current.value = "";
+  };
+
+  const checkRequired = (opt) => {
+    const emailRegex =
+      /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     // 아이디(이메일) 유효성 검증
-    if (!active) {
+    if (opt == "passwd" && !emailRegex.test(email.current.value)) {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
@@ -65,25 +63,21 @@ function FindAccountModal(props) {
       });
       return;
     }
-    signUp(props.opt);
+    findAccount(props.opt);
   };
 
-  function signUp(opt) {
+  function findAccount(opt) {
     switch (opt) {
       case "email":
-        AuthService.getUserEmail(
-          emailRef.current.value,
-          phoneNum.current.value,
-        );
+        AuthService.getUserEmail(name.current.value, phoneNum.current.value);
         break;
 
       case "passwd":
         const form = new FormData();
-        form.append("email", emailRef.current.value);
+        form.append("email", email.current.value);
         form.append("name", name.current.value);
         form.append("phone", phoneNum.current.value);
-        console.log("== 호출확인111 ==\n" + form);
-        AuthService.setTemporalPasswd(emailRef.current.value, form);
+        AuthService.setTemporalPasswd(email.current.value, form);
         break;
     }
   }
@@ -99,7 +93,13 @@ function FindAccountModal(props) {
           keyboard={false}
           centered
         >
-          <Modal.Header closeButton>
+          <Modal.Header
+            closeButton
+            onClick={() => {
+              console.log("닫기");
+              handleReset();
+            }}
+          >
             <Modal.Title>
               <PersonVcard size={40} />
               &nbsp;&nbsp;Find Email
@@ -132,7 +132,7 @@ function FindAccountModal(props) {
                             type="text"
                             maxLength={13}
                             onChange={(e) => {
-                              handleRegex(e.target.value, "phone");
+                              handlePhoneNum(e.target.value);
                             }}
                             value={phone}
                             ref={phoneNum}
@@ -151,7 +151,7 @@ function FindAccountModal(props) {
               <button
                 className={"btn-main"}
                 onClick={() => {
-                  checkRequired();
+                  checkRequired(props.opt);
                 }}
               >
                 Confirm
@@ -172,7 +172,13 @@ function FindAccountModal(props) {
           keyboard={false}
           centered
         >
-          <Modal.Header closeButton>
+          <Modal.Header
+            closeButton
+            onClick={() => {
+              console.log("닫기");
+              handleReset();
+            }}
+          >
             <Modal.Title>
               <PersonVcard size={40} />
               &nbsp;&nbsp;Find Password
@@ -189,14 +195,8 @@ function FindAccountModal(props) {
                         <td>
                           <input
                             className="input"
-                            type="email"
-                            value={email}
-                            id={emailRef}
-                            ref={emailRef}
-                            onChange={(e) => {
-                              setEmail(e.target.value);
-                              handleRegex(e.target.value, "email");
-                            }}
+                            type="text"
+                            ref={email}
                             placeholder="이메일을 입력해주세요"
                             align="center"
                             style={{ width: "90%" }}
@@ -224,7 +224,7 @@ function FindAccountModal(props) {
                             type="text"
                             maxLength={13}
                             onChange={(e) => {
-                              handleRegex(e.target.value, "phone");
+                              handlePhoneNum(e.target.value);
                             }}
                             value={phone}
                             ref={phoneNum}
@@ -243,7 +243,7 @@ function FindAccountModal(props) {
               <button
                 className={"btn-main"}
                 onClick={() => {
-                  checkRequired();
+                  checkRequired(props.opt);
                 }}
               >
                 Confirm

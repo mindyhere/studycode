@@ -45,10 +45,8 @@ public class UserService {
 
         String tempPasswd = MailService.getTempCode();
         String encodedPwd = pwEncoder.encode(tempPasswd);
-        UserDTO dto = new UserDTO(email, encodedPwd);
-
-        User u = modelMapper.map(dto, User.class);
-        userRepository.save(u);
+        user.get().setPasswd(encodedPwd);
+        userRepository.save(user.get());
 
         MailDTO mailDto = mailService.setTempCodeEmail(email, tempPasswd);
         String result = mailService.sendEmail(mailDto);

@@ -124,7 +124,9 @@ function LoginPage() {
       <FindAccountModal
         opt={option}
         show={findAcc}
-        onHide={() => setFindAcc(false)}
+        onHide={() => {
+          setFindAcc(false);
+        }}
       />
     </>
   );
