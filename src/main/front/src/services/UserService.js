@@ -1,5 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import { setAuthorizationToken } from "../util/Authorization";
 
 const API_URL = "http://localhost/api/auth";
 
@@ -14,6 +15,7 @@ const setAuthUser = async (credentials, navigate) => {
     });
 
     localStorage.setItem("token", response.data);
+    setAuthorizationToken(response.data);
     Swal.fire({
       icon: "success",
       text: "로그인 되었습니다.",

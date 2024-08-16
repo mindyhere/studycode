@@ -5,7 +5,7 @@ import "../css/Login.css";
 import JoinModal from "./JoinModal";
 import FindAccountModal from "./FindAccountModal";
 
-import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function LoginPage() {
   const [option, setOption] = useState("");
 
   function signIn(email, passwd) {
-    console.log(email.value + "\n" + passwd.value);
+    // console.log(email.value + "\n" + passwd.value);
     if (email.value === "") {
       Swal.fire({
         icon: "warning",
@@ -51,7 +51,7 @@ function LoginPage() {
       email: email.value,
       passwd: passwd.value,
     };
-    AuthService.setAuthUser(credentials, navigate);
+    UserService.setAuthUser(credentials, navigate);
   }
 
   return (

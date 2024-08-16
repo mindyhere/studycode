@@ -8,7 +8,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Table(name = "tb_attach")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Attach {
 
     @Id
@@ -16,7 +16,7 @@ public class Attach {
     private Long id;
 
     @Column
-    private String fileName;
+    private String filename;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

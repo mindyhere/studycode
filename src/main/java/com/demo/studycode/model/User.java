@@ -52,11 +52,11 @@ public class User { // 유저 정보 저장 용도
     List<Study> applyList = new ArrayList<>();
 
     @Builder
-    public User(Long id, String email, String name, String role) {
+    public User(Long id) {
         this.id = id;
-        this.email = email;
-        this.name = name;
-        this.role = role;
+//        this.email = email;
+//        this.name = name;
+//        this.role = role;
     }
 
 }

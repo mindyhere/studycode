@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import Modal from "react-bootstrap/Modal";
 import { PersonVcard } from "react-bootstrap-icons";
 
-import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 import "../css/Login.css";
 
 function JoinModal(props) {
@@ -117,7 +117,7 @@ function JoinModal(props) {
       form.append("photo", profile.current.files[0]);
     }
     console.log("== 호출확인111 ==\n" + form);
-    AuthService.createUser(form);
+    UserService.createUser(form);
   }
 
   return (
@@ -172,7 +172,7 @@ function JoinModal(props) {
                           disabled={active ? false : true}
                           onClick={() => {
                             console.log("active 클릭");
-                            AuthService.setTemporalCode(emailRef.current.value);
+                            UserService.setTemporalCode(emailRef.current.value);
                           }}
                         >
                           &nbsp;코드발송&nbsp;

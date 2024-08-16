@@ -82,7 +82,11 @@ function Header() {
               <a className="nav-link" href="#">
                 자료실
               </a>
-              <a className="nav-link" style={{cursor:"pointer"}} onClick={() => signOut()}>
+              <a
+                className="nav-link"
+                style={{ cursor: "pointer" }}
+                onClick={() => signOut()}
+              >
                 로그아웃
               </a>
             </div>

@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import Modal from "react-bootstrap/Modal";
 import { PersonVcard } from "react-bootstrap-icons";
 
-import AuthService from "../services/AuthService";
+import UserService from "../services/UserService";
 import "../css/Login.css";
 
 function FindAccountModal(props) {
@@ -69,7 +69,7 @@ function FindAccountModal(props) {
   function findAccount(opt) {
     switch (opt) {
       case "email":
-        AuthService.getUserEmail(name.current.value, phoneNum.current.value);
+        UserService.getUserEmail(name.current.value, phoneNum.current.value);
         break;
 
       case "passwd":
@@ -77,7 +77,7 @@ function FindAccountModal(props) {
         form.append("email", email.current.value);
         form.append("name", name.current.value);
         form.append("phone", phoneNum.current.value);
-        AuthService.setTemporalPasswd(email.current.value, form);
+        UserService.setTemporalPasswd(email.current.value, form);
         break;
     }
   }

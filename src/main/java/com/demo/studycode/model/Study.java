@@ -69,4 +69,8 @@ public class Study { // 스터디 정보 저장
     @OneToMany(mappedBy = "study")
     List<Apply> applicants = new ArrayList<>();
 
+    public Study(long id) {
+        this.id = id;
+    }
+
 }

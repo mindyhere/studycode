@@ -6,6 +6,7 @@ import "./App.css";
 import LoginPage from "./pages/LoginPage";
 import MainPage from "./pages/MainPage";
 import Header from "./components/Header";
+import AddPostPage   from "./pages/AddPostPage";
 
 function App() {
   if (process.env.NODE_ENV === "production") {
@@ -23,6 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/main" element={<MainPage />} />
+          <Route path="/addPost" element={<AddPostPage />} />
         </Routes>
       </BrowserRouter>
     </>
