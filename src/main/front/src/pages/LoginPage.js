@@ -9,24 +9,24 @@ import UserService from "../services/UserService";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const email = useRef();
+  const userid = useRef();
   const passwd = useRef();
   const [join, setJoin] = useState(false);
   const [findAcc, setFindAcc] = useState(false);
   const [option, setOption] = useState("");
 
-  function signIn(email, passwd) {
+  function signIn(userid, passwd) {
     // console.log(email.value + "\n" + passwd.value);
-    if (email.value === "") {
+    if (userid.value === "") {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
-        html: "이메일을 입력해주세요.",
+        html: "야이디를 입력해주세요.",
         showConfirmButton: false,
         timer: 1500,
         didClose: () => {
-          email.value = "";
-          email.focus();
+          userid.value = "";
+          userid.focus();
         },
       });
       return;
@@ -48,7 +48,7 @@ function LoginPage() {
     }
 
     const credentials = {
-      email: email.value,
+      userid: userid.value,
       passwd: passwd.value,
     };
     UserService.setAuthUser(credentials, navigate);
@@ -64,8 +64,8 @@ function LoginPage() {
             <input
               className="input"
               type="text"
-              ref={email}
-              placeholder="이메일을 입력해주세요"
+              ref={userid}
+              placeholder="아이디를 입력해주세요"
               align="center"
             />
           </div>
@@ -83,7 +83,7 @@ function LoginPage() {
           <div colSpan="2" align="center">
             <button
               onClick={() => {
-                signIn(email.current, passwd.current);
+                signIn(userid.current, passwd.current);
               }}
               className="btn-main"
             >
@@ -94,7 +94,7 @@ function LoginPage() {
           <p>
             <a
               onClick={() => {
-                setOption("email");
+                setOption("userid");
                 setFindAcc(true);
               }}
             >

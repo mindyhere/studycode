@@ -7,11 +7,15 @@ import UserService from "../services/UserService";
 import "../css/Login.css";
 
 function JoinModal(props) {
+  const idRef = useRef();
+  const [userid, setUserid] = useState("");
+  const [check, setCheckRegid] = useState(false);
+  const [exist, setExistId] = useState(false);
+  const passwd = useRef();
+  const pwCheck = useRef();
   const [email, setEmail] = useState("");
   const emailRef = useRef();
   const confirmCode = useRef();
-  const passwd = useRef();
-  const pwCheck = useRef();
   const name = useRef();
   const [phone, setPhoneNum] = useState("");
   const phoneNum = useRef();
@@ -19,6 +23,7 @@ function JoinModal(props) {
   const [active, setActive] = useState(false);
 
   const handleRegex = (val, type) => {
+    const idRegex = /^[a-z]+[a-z0-9]{5,19}$/g;
     const phoneRegex = /^[0-9\b -]{0,13}$/;
     const emailRegex =
       /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -32,6 +37,10 @@ function JoinModal(props) {
             val.replace(/-/g, "").replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3"),
           );
         }
+        break;
+      case "id":
+        idRegex.test(val) ? setCheckRegid(true) : setCheckRegid(false);
+
         break;
     }
   };
@@ -107,6 +116,31 @@ function JoinModal(props) {
     signUp();
   };
 
+  const setResponse = (e) => {
+    UserService.checkRegisteredId(e)
+      .then((response) => {
+        if (!response.data) throw new Error("이미 사용 중인 아이디입니다.");
+        setExistId(false);
+        Swal.fire({
+          icon: "success",
+          text: "사용할 수 있는 아이디입니다.",
+          showConfirmButton: false,
+          timer: 2500,
+        });
+      })
+      .catch((err) => {
+        console.error("=== err ===\n", err);
+        setExistId(true);
+        Swal.fire({
+          icon: "warning",
+          title: "잠깐!",
+          html: err,
+          showConfirmButton: false,
+          timer: 2500,
+        });
+      });
+  };
+
   function signUp() {
     const form = new FormData();
     form.append("email", emailRef.current.value);
@@ -138,10 +172,45 @@ function JoinModal(props) {
         </Modal.Header>
         <Modal.Body>
           <div className="form-field">
-            <div className="container-fluid">
-              <div className="row">
-                <table className="col-md">
+              <div className="ms-lg-1">
+                <table className="container-xl">
                   <tbody>
+                    <tr>
+                      <td>*아이디</td>
+                      <td>
+                        <input
+                          className="input"
+                          type="text"
+                          value={userid}
+                          ref={idRef}
+                          onChange={(e) => {
+                            setUserid(e.target.value);
+                            handleRegex(e.target.value, "id");
+                          }}
+                          placeholder="아이디를 입력해주세요"
+                          align="center"
+                          style={{ width: "95%" }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          className={"btn-main"}
+                          style={{
+                            width: "80px",
+                            lineHeight: "13px",
+                            fontSize: "12px",
+                          }}
+                          disabled={check ? false : true}
+                          onClick={() => {
+                            setResponse(idRef.current.value);
+                          }}
+                        >
+                          &nbsp;중복확인&nbsp;
+                        </button>
+                      </td>
+                    </tr>
+
                     <tr>
                       <td rowSpan={2}>*이메일</td>
                       <td>
@@ -149,7 +218,6 @@ function JoinModal(props) {
                           className="input"
                           type="email"
                           value={email}
-                          id={emailRef}
                           ref={emailRef}
                           onChange={(e) => {
                             setEmail(e.target.value);
@@ -157,13 +225,13 @@ function JoinModal(props) {
                           }}
                           placeholder="이메일을 입력해주세요"
                           align="center"
-                          style={{ width: "90%" }}
+                          style={{ width: "95%" }}
                         />
                       </td>
                       <td rowSpan={2}>
                         <button
                           type="button"
-                          className={"btn-main" + (active ? "" : " disabled")}
+                          className={"btn-main" }
                           style={{
                             width: "80px",
                             lineHeight: "13px",
@@ -187,7 +255,7 @@ function JoinModal(props) {
                           ref={confirmCode}
                           placeholder="이메일 인증코드를 확인해주세요."
                           align="center"
-                          style={{ width: "90%" }}
+                          style={{ width: "95%" }}
                         />
                       </td>
                     </tr>
@@ -201,7 +269,7 @@ function JoinModal(props) {
                           ref={passwd}
                           placeholder="비밀번호를 입력해주세요"
                           align="center"
-                          style={{ width: "93%" }}
+                          style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
@@ -213,7 +281,7 @@ function JoinModal(props) {
                           ref={pwCheck}
                           placeholder="다시 한번 입력해주세요"
                           align=""
-                          style={{ width: "93%" }}
+                          style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
@@ -227,7 +295,7 @@ function JoinModal(props) {
                           ref={name}
                           placeholder="이름을 입력해주세요"
                           align="center"
-                          style={{ width: "93%" }}
+                          style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
@@ -246,7 +314,7 @@ function JoinModal(props) {
                           ref={phoneNum}
                           placeholder="숫자만 입력해주세요"
                           align="center"
-                          style={{ width: "93%" }}
+                          style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
@@ -258,14 +326,13 @@ function JoinModal(props) {
                           className="form-control"
                           type="file"
                           ref={profile}
-                          style={{ width: "95%" }}
+                          style={{ width: "90%" }}
                         />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-            </div>
           </div>
 
           <div className="col m-2 pt-3" align="right">

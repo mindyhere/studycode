@@ -19,12 +19,12 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<? extends GrantedAuthority> authorities =
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
 
-    public Long getEmail() {
-        return user.getId();
+    public Long getIdx() {
+        return user.getIdx();
     }
 
     @Override
@@ -34,19 +34,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
-    }
-
-    public String getName() {
-        return user.getName();
-    }
-
-    public String getPhone() {
-        return user.getPhone();
-    }
-
-    public String getProfile() {
-        return user.getProfile();
+        return user.getUserid();
     }
 
     @Override

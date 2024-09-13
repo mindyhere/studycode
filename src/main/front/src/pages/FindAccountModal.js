@@ -8,7 +8,7 @@ import "../css/Login.css";
 
 function FindAccountModal(props) {
   const email = useRef();
-  const name = useRef();
+  const userid = useRef();
   const [phone, setPhoneNum] = useState("");
   const phoneNum = useRef();
 
@@ -23,33 +23,33 @@ function FindAccountModal(props) {
   };
 
   const handleReset = () => {
-    if (props.opt == "passwd") email.current.value = "";
+    if (props.opt == "passwd") userid.current.value = "";
     setPhoneNum("");
-    name.current.value = "";
+    email.current.value = "";
   };
 
   const checkRequired = (opt) => {
     const emailRegex =
       /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
     // 아이디(이메일) 유효성 검증
-    if (opt == "passwd" && !emailRegex.test(email.current.value)) {
+    if (!emailRegex.test(email.current.value)) {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
         html: "이메일을 확인해주세요.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
       return;
     }
 
-    if (name.current.value == "") {
+    if (opt == "passwd" && userid.current.value == "") {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
-        html: "이름을 입력해주세요.",
+        html: "아이디를 입력해주세요.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
       return;
     }
@@ -59,7 +59,8 @@ function FindAccountModal(props) {
         icon: "warning",
         title: "잠깐!",
         html: "전화번호를 확인해주세요.",
-        confirmButtonText: "OK",
+        showConfirmButton: false,
+        timer: 2500,
       });
       return;
     }
@@ -68,21 +69,21 @@ function FindAccountModal(props) {
 
   function findAccount(opt) {
     switch (opt) {
-      case "email":
-        UserService.getUserEmail(name.current.value, phoneNum.current.value);
+      case "userid":
+        UserService.getUserid(email.current.value, phoneNum.current.value);
         break;
 
       case "passwd":
         const form = new FormData();
         form.append("email", email.current.value);
-        form.append("name", name.current.value);
+        form.append("userid", userid.current.value);
         form.append("phone", phoneNum.current.value);
-        UserService.setTemporalPasswd(email.current.value, form);
+        UserService.setTemporalPasswd(userid.current.value, form);
         break;
     }
   }
 
-  if (props.opt == "email") {
+  if (props.opt == "userid") {
     return (
       <>
         <Modal
@@ -102,7 +103,7 @@ function FindAccountModal(props) {
           >
             <Modal.Title>
               <PersonVcard size={40} />
-              &nbsp;&nbsp;Find Email
+              &nbsp;&nbsp;아이디 찾기
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -111,23 +112,23 @@ function FindAccountModal(props) {
                 <div className="row">
                   <table className="col-md">
                     <tbody>
-                      <tr>
-                        <td>이름</td>
-                        <td colSpan={2}>
-                          <input
+                    <tr>
+                      <td>이메일</td>
+                      <td>
+                        <input
                             className="input"
                             type="text"
-                            ref={name}
-                            placeholder="이름을 입력해주세요"
+                            ref={email}
+                            placeholder="이메일을 입력해주세요"
                             align="center"
-                            style={{ width: "93%" }}
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>전화번호</td>
-                        <td colSpan={2}>
-                          <input
+                            style={{width: "90%"}}
+                        />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>전화번호</td>
+                      <td colSpan={2}>
+                        <input
                             className="input"
                             type="text"
                             maxLength={13}
@@ -138,10 +139,10 @@ function FindAccountModal(props) {
                             ref={phoneNum}
                             placeholder="숫자만 입력해주세요"
                             align="center"
-                            style={{ width: "93%" }}
-                          />
-                        </td>
-                      </tr>
+                            style={{width: "93%"}}
+                        />
+                      </td>
+                    </tr>
                     </tbody>
                   </table>
                 </div>
@@ -149,10 +150,10 @@ function FindAccountModal(props) {
             </div>
             <div className="col m-2 pt-3" align="right">
               <button
-                className={"btn-main"}
-                onClick={() => {
-                  checkRequired(props.opt);
-                }}
+                  className={"btn-main"}
+                  onClick={() => {
+                    checkRequired(props.opt);
+                  }}
               >
                 Confirm
               </button>
@@ -181,7 +182,7 @@ function FindAccountModal(props) {
           >
             <Modal.Title>
               <PersonVcard size={40} />
-              &nbsp;&nbsp;Find Password
+              &nbsp;&nbsp;비밀번호 찾기
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -191,28 +192,28 @@ function FindAccountModal(props) {
                   <table className="col-md">
                     <tbody>
                       <tr>
-                        <td>이메일</td>
+                        <td>아이디</td>
                         <td>
                           <input
                             className="input"
                             type="text"
-                            ref={email}
-                            placeholder="이메일을 입력해주세요"
+                            ref={userid}
+                            placeholder="아이디를 입력해주세요"
                             align="center"
-                            style={{ width: "90%" }}
+                            style={{ width: "93%" }}
                           />
                         </td>
                       </tr>
                       <tr>
-                        <td>이름</td>
+                        <td>이메일</td>
                         <td>
                           <input
-                            className="input"
-                            type="text"
-                            ref={name}
-                            placeholder="이름을 입력해주세요"
-                            align="center"
-                            style={{ width: "93%" }}
+                              className="input"
+                              type="text"
+                              ref={email}
+                              placeholder="이메일을 입력해주세요"
+                              align="center"
+                              style={{ width: "90%" }}
                           />
                         </td>
                       </tr>

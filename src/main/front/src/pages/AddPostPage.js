@@ -14,38 +14,52 @@ function AddPostPage() {
   return (
     <>
       <div className="container form-field">
-        <div className="container-fluid">
-          <div className="row">
-            <table className="col-md m-3">
-              <tbody>
-                <tr>
-                  <td className="p-2">*제목</td>
-                  <td colSpan={2}>
-                    <input
-                      className="input"
-                      type="text"
-                      ref={title}
-                      align="center"
-                      style={{ width: "90%" }}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="p-2">*주제</td>
-                  <td colSpan={2}>
-                    <input
-                      className="input"
-                      type="text"
-                      ref={topic}
-                      align="center"
-                      style={{ width: "90%" }}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        {/*<div className="container-fluid">*/}
+        {/*  <div className="row">*/}
+        {/*    <table className="col-md m-3">*/}
+        {/*      <tbody>*/}
+        {/*        <tr>*/}
+        {/*          <td className="p-2">*제목</td>*/}
+        {/*          <td colSpan={2}>*/}
+        {/*            <input*/}
+        {/*              className="input"*/}
+        {/*              type="text"*/}
+        {/*              ref={title}*/}
+        {/*              align="center"*/}
+        {/*              style={{ width: "90%" }}*/}
+        {/*            />*/}
+        {/*          </td>*/}
+        {/*        </tr>*/}
+        {/*        <tr>*/}
+        {/*          <td className="p-2">*이름</td>*/}
+        {/*          <td colSpan={2}>*/}
+        {/*            <input*/}
+        {/*              className="input"*/}
+        {/*              type="text"*/}
+        {/*              value={""}*/}
+        {/*              ref={email}*/}
+        {/*              align="center"*/}
+        {/*              readOnly={true}*/}
+        {/*              style={{ width: "90%" }}*/}
+        {/*            />*/}
+        {/*          </td>*/}
+        {/*        </tr>*/}
+        {/*        <tr>*/}
+        {/*          <td className="p-2">*주제</td>*/}
+        {/*          <td colSpan={2}>*/}
+        {/*            <input*/}
+        {/*              className="input"*/}
+        {/*              type="text"*/}
+        {/*              ref={topic}*/}
+        {/*              align="center"*/}
+        {/*              style={{ width: "90%" }}*/}
+        {/*            />*/}
+        {/*          </td>*/}
+        {/*        </tr>*/}
+        {/*      </tbody>*/}
+        {/*    </table>*/}
+        {/*  </div>*/}
+        {/*</div>*/}
 
         <CommonEditor ref={editorRef} />
       </div>

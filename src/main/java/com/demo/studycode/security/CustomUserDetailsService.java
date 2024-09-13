@@ -26,8 +26,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = this.userRepository.findByEmail(email);
+    public CustomUserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
+        Optional<User> user = this.userRepository.findByUserid(userid);
         UserDTO dto = modelMapper.map(user, UserDTO.class);
         return new CustomUserDetails(dto);
     }

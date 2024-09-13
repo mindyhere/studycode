@@ -1,22 +1,25 @@
 package com.demo.studycode.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.antlr.v4.runtime.misc.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Table(name = "tb_attach")
+@Table(name = "tb_like")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Attach {
-
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column
-    private String filename;
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_idx")
+    private User user;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

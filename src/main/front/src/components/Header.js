@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { MarkerTip } from "react-bootstrap-icons";
+import "../css/Header.css";
 
 function Header() {
   const navigate = useNavigate();
@@ -47,52 +48,91 @@ function Header() {
     return () => clearTimeout(timerRef.current);
   }, []);
 
-  if (location.pathname === "/") return null; // 로그인페이지에서 헤더 제거
+  if (location.pathname === "/login") return null; // 로그인페이지에서 헤더 제거
 
   if (token == null) {
-    Swal.fire({
-      icon: "error",
-      title: "잠깐!",
-      html: "잘못된 접근입니다.<br/>로그인 후 이용해주세요.",
-      showConfirmButton: false,
-      timer: 2000,
-    }).then(() => {
-      navigate("/");
-    });
+    return (
+      <>
+        <div className="container mt-3 d-flex flex-wrap justify-content-center">
+          <h1>
+            <a
+              href="/"
+              className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto"
+            >
+              <MarkerTip />
+              &nbsp;Studycode
+            </a>
+          </h1>
+        </div>
+        <nav className="py-2 bg-body-tertiary border-bottom">
+          <div className="container d-flex flex-wrap justify-content-center">
+            <ul className="nav">
+              <li className="nav-item mx-2">
+                <a href="/" className="nav-link link-body-emphasis px-2">
+                  둘러보기
+                </a>
+              </li>
+              <li className="nav-item mx-2">
+                <a href="#" className="nav-link link-body-emphasis px-2">
+                  자료나눔
+                </a>
+              </li>
+              <li className="nav-item mx-2">
+                <a href="/login" className="nav-link link-body-emphasis px-2">
+                  로그인/회원가입
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </>
+    );
   } else {
     // 로그인 성공 시
     timeoutAlert();
     return (
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
-          <a className="navbar-brand" href="/main">
-            <MarkerTip />
-            &nbsp;Studycode
-          </a>
-
-          {/* 호스트로그인 후 상단 */}
-          <div id="navbarNavAltMarkup">
-            <div className="navbar-nav">
-              <a className="nav-link" href="/main">
-                둘러보기
-              </a>
-              <a className="nav-link" href="#">
-                내계정
-              </a>
-              <a className="nav-link" href="#">
-                자료실
-              </a>
-              <a
-                className="nav-link"
-                style={{ cursor: "pointer" }}
-                onClick={() => signOut()}
-              >
-                로그아웃
-              </a>
-            </div>
-          </div>
+      <>
+        <div className="container mt-3 d-flex flex-wrap justify-content-center">
+          <h1>
+            <a
+              href="/"
+              className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto"
+            >
+              <MarkerTip />
+              &nbsp;Studycode
+            </a>
+          </h1>
         </div>
-      </nav>
+        <nav className="py-2 bg-body-tertiary border-bottom">
+          <div className="container d-flex flex-wrap justify-content-center">
+            <ul className="nav">
+              <li className="nav-item mx-2">
+                <a href="/" className="nav-link link-body-emphasis px-2">
+                  둘러보기
+                </a>
+              </li>
+              <li className="nav-item mx-2">
+                <a href="#" className="nav-link link-body-emphasis px-2">
+                  자료나눔
+                </a>
+              </li>
+              <li className="nav-item mx-2">
+                <a href="#" className="nav-link link-body-emphasis px-2">
+                  내계정
+                </a>
+              </li>
+              <li className="nav-item mx-2">
+                <a
+                  className="nav-link link-body-emphasis px-2"
+                  onClick={() => signOut()}
+                >
+                  로그아웃
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </>
     );
   }
 }

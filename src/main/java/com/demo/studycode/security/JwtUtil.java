@@ -36,9 +36,9 @@ public class JwtUtil {
     //JWT 생성
     private String createToken(AuthDTO authUser, long expireTime) {
         Claims claims = Jwts.claims();
-        claims.put("id", authUser.getId());
-        claims.put("email", authUser.getEmail());
-        claims.put("role", authUser.getRole());
+        claims.put("idx", authUser.getIdx());
+        claims.put("userid", authUser.getUserid());
+        claims.put("name", authUser.getName());
 
         ZonedDateTime now = ZonedDateTime.now();
         ZonedDateTime expiresAt = now.plusSeconds(expireTime);
@@ -53,13 +53,13 @@ public class JwtUtil {
 
 
     // Token에서 User ID 추출
-    public Long getUserId(String token) {
-        return parseClaims(token).get("id", Long.class);
+    public String getUserid(String token) {
+        return parseClaims(token).get("userid", String.class);
     }
 
-    // Token에서 User eamil 추출
-    public String getUserEmail(String token) {
-        return parseClaims(token).get("email", String.class);
+    // Token에서 User name 추출
+    public String getName(String token) {
+        return parseClaims(token).get("name", String.class);
     }
 
     // JWT 검증

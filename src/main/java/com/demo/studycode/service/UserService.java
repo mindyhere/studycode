@@ -26,22 +26,27 @@ public class UserService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public String findUserEmail(String name, String phone) {
-        Optional<User> user = userRepository.findByNameAndPhone(name, phone);
-        if (!user.isPresent()) return "fail";
+    public UserDTO findUserid(String email, String phone) {
+        Optional<User> user = userRepository.findByEmailAndPhone(email, phone);
+        if (!user.isPresent()) return null;
 
-        String email = user.get().getEmail();
-        return email;
+        UserDTO dto = new UserDTO();
+        String userid = user.get().getUserid();
+        String name = user.get().getName();
+        dto.setUserid(userid);
+        dto.setName(name);
+
+        return dto;
     }
 
     public String resetPasswd(Map<String, Object> map) {
 
+        String userid = (String) map.get("userid");
         String email = (String) map.get("email");
-        String name = map.get("name").toString();
         String phone = (String) map.get("phone");
-        Optional<User> user = userRepository.findByEmailAndNameAndPhone(email, name, phone);
+        Optional<User> user = userRepository.findByUseridAndEmailAndPhone(userid, email, phone);
 
-        if (!user.isPresent()) return "fail";
+        if (!user.isPresent()) return "not exist";
 
         String tempPasswd = MailService.getTempCode();
         String encodedPwd = pwEncoder.encode(tempPasswd);

@@ -22,9 +22,9 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/main" element={<MainPage />} />
-          <Route path="/addPost" element={<AddPostPage />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/*<Route path="/addPost" element={<AddPostPage />} />*/}
         </Routes>
       </BrowserRouter>
     </>

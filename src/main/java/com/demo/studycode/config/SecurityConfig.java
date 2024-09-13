@@ -24,35 +24,35 @@ import org.springframework.security.web.firewall.HttpFirewall;
 @Configuration
 @EnableWebSecurity
 // Annotation을 통해 Controller의 API 보안 수준 설정하도록 활성화
-//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+// @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        System.out.println(http);
         // CSRF, CORS
-        http.csrf((csrf) -> csrf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
         http.cors(Customizer.withDefaults());
 
         // FormLogin, BasicHttp 비활성화
         // Spring 웹 페이지에서 제공되는 로그인 폼을 통해 사용자를 인증하는 메커니즘과 HTTP 기반 기본 인증을 비활성화
         http.formLogin((form) -> form.disable());
-        http.httpBasic(AbstractHttpConfigurer::disable);
+        http.httpBasic((auth) -> auth.disable());
 
         // 권한 규칙
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 // 세션 관리 상태 없음으로 구성(Spring Security가 세션 생성 or 사용 X)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JwtFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
                 .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtil), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(
                         (authorizeHttpRequests) -> authorizeHttpRequests
-                                .requestMatchers("/main/**").authenticated() // 일반유저 관련 모든 요청에 대해 승인된 사용자만 허용
-                                .requestMatchers("/**").permitAll() // 모든 경로 대해 모든 사용자 허용
+                                .requestMatchers("/main/**", "/api/auth/**").permitAll() // 모든 경로 대해 모든 사용자 허용
+                                .requestMatchers( "/api/**").authenticated() // 관련 모든 요청에 대해 승인된 사용자만 허용
                                 .anyRequest().permitAll()
                 );
 
