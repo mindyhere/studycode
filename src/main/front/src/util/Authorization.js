@@ -10,3 +10,4 @@ export const setAuthorizationToken = (token) => {
     }
   }
 };
+

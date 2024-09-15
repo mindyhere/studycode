@@ -117,9 +117,7 @@ const setTemporalCode = async (email) => {
     .get(`${API_URL}/check/email/${email}`)
     .then((response) => {
       if (response.data == "exits")
-        throw new Error(
-          "기존에 등록된 이메일입니다.",
-        );
+        throw new Error("기존에 등록된 이메일입니다.");
       console.log("=== 결과 ===\n" + response.data);
       localStorage.setItem("tempCode", response.data);
 
@@ -144,7 +142,7 @@ const setTemporalCode = async (email) => {
 };
 
 const createUser = async (form) => {
-  console.log("== 호출확인 ==\n" + form.stringify);
+  console.log("== 호출확인 ==\n" + JSON.stringify(form));
   try {
     const response = await axios
       .post(`${API_URL}/signUp`, form, {
@@ -158,9 +156,10 @@ const createUser = async (form) => {
           text: "회원가입이 완료되었습니다.",
           showConfirmButton: false,
           timer: 2500,
+        }).then(() => {
+          localStorage.removeItem("tempCode");
+          window.location.reload();
         });
-        localStorage.removeItem("tempCode");
-        window.location.reload();
       });
   } catch (error) {
     console.error("=== 로그인 실패 ===\n", error);

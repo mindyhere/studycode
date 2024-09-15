@@ -46,14 +46,26 @@ function JoinModal(props) {
   };
 
   const checkRequired = () => {
-    // 아이디(이메일) 유효성 검증
+    // 아이디 유효성 검증
+    if (!check || exist) {
+      Swal.fire({
+        icon: "warning",
+        title: "잠깐!",
+        html: "아이디를 확인해주세요.",
+        showConfirmButton: false,
+        timer: 2500,
+      });
+      return;
+    }
+
+    // 이메일 유효성 검증
     if (!active) {
       Swal.fire({
         icon: "warning",
         title: "잠깐!",
         html: "이메일을 확인해주세요.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
       return;
     } else {
@@ -64,7 +76,7 @@ function JoinModal(props) {
           title: "잠깐!",
           html: "이메일 인증코드를 확인해주세요.",
           showConfirmButton: false,
-          timer: 2000,
+          timer: 2500,
         });
         return;
       }
@@ -77,7 +89,7 @@ function JoinModal(props) {
         title: "잠깐!",
         html: "비밀번호를 입력해주세요.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
       return;
     } else {
@@ -87,7 +99,7 @@ function JoinModal(props) {
           title: "잠깐!",
           html: "비밀번호가 일치하지 않습니다.",
           showConfirmButton: false,
-          timer: 2000,
+          timer: 2500,
         });
         return;
       }
@@ -99,7 +111,7 @@ function JoinModal(props) {
         title: "잠깐!",
         html: "이름을 입력해주세요.",
         showConfirmButton: false,
-        timer: 2000,
+        timer: 2500,
       });
       return;
     }
@@ -141,8 +153,25 @@ function JoinModal(props) {
       });
   };
 
+  const handleReset = () => {
+    // idRef.current.value = "";
+    // emailRef.current.value = "";
+    setUserid("");
+    setEmail("");
+    confirmCode.current.value = "";
+    passwd.current.value = "";
+    pwCheck.current.value = "";
+    name.current.value = "";
+    setPhoneNum("");
+    setExistId(false);
+    if (localStorage.getItem("tempCode") != "") {
+      localStorage.removeItem("tempCode");
+    }
+  };
+
   function signUp() {
     const form = new FormData();
+    form.append("userid", idRef.current.value);
     form.append("email", emailRef.current.value);
     form.append("passwd", passwd.current.value);
     form.append("name", name.current.value);
@@ -164,7 +193,13 @@ function JoinModal(props) {
         keyboard={false}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header
+          closeButton
+          onClick={() => {
+            console.log("닫기");
+            handleReset();
+          }}
+        >
           <Modal.Title>
             <PersonVcard size={40} />
             &nbsp;&nbsp;Sign Up
@@ -172,167 +207,168 @@ function JoinModal(props) {
         </Modal.Header>
         <Modal.Body>
           <div className="form-field">
-              <div className="ms-lg-1">
-                <table className="container-xl">
-                  <tbody>
-                    <tr>
-                      <td>*아이디</td>
-                      <td>
-                        <input
-                          className="input"
-                          type="text"
-                          value={userid}
-                          ref={idRef}
-                          onChange={(e) => {
-                            setUserid(e.target.value);
-                            handleRegex(e.target.value, "id");
-                          }}
-                          placeholder="아이디를 입력해주세요"
-                          align="center"
-                          style={{ width: "95%" }}
-                        />
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className={"btn-main"}
-                          style={{
-                            width: "80px",
-                            lineHeight: "13px",
-                            fontSize: "12px",
-                          }}
-                          disabled={check ? false : true}
-                          onClick={() => {
-                            setResponse(idRef.current.value);
-                          }}
-                        >
-                          &nbsp;중복확인&nbsp;
-                        </button>
-                      </td>
-                    </tr>
+            <div className="ms-lg-1">
+              <table className="container-xl">
+                <tbody>
+                  <tr>
+                    <td>*아이디</td>
+                    <td>
+                      <input
+                        className="input"
+                        type="text"
+                        value={userid}
+                        ref={idRef}
+                        onChange={(e) => {
+                          setUserid(e.target.value);
+                          handleRegex(e.target.value, "id");
+                          setExistId(false);
+                        }}
+                        placeholder="아이디를 입력해주세요"
+                        align="center"
+                        style={{ width: "95%" }}
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        className={"btn-main"}
+                        style={{
+                          width: "80px",
+                          lineHeight: "13px",
+                          fontSize: "12px",
+                        }}
+                        disabled={check ? false : true}
+                        onClick={() => {
+                          setResponse(idRef.current.value);
+                        }}
+                      >
+                        &nbsp;중복확인&nbsp;
+                      </button>
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td rowSpan={2}>*이메일</td>
-                      <td>
-                        <input
-                          className="input"
-                          type="email"
-                          value={email}
-                          ref={emailRef}
-                          onChange={(e) => {
-                            setEmail(e.target.value);
-                            handleRegex(e.target.value, "email");
-                          }}
-                          placeholder="이메일을 입력해주세요"
-                          align="center"
-                          style={{ width: "95%" }}
-                        />
-                      </td>
-                      <td rowSpan={2}>
-                        <button
-                          type="button"
-                          className={"btn-main" }
-                          style={{
-                            width: "80px",
-                            lineHeight: "13px",
-                            fontSize: "12px",
-                          }}
-                          disabled={active ? false : true}
-                          onClick={() => {
-                            console.log("active 클릭");
-                            UserService.setTemporalCode(emailRef.current.value);
-                          }}
-                        >
-                          &nbsp;코드발송&nbsp;
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <input
-                          className="input"
-                          type="text"
-                          ref={confirmCode}
-                          placeholder="이메일 인증코드를 확인해주세요."
-                          align="center"
-                          style={{ width: "95%" }}
-                        />
-                      </td>
-                    </tr>
+                  <tr>
+                    <td rowSpan={2}>*이메일</td>
+                    <td>
+                      <input
+                        className="input"
+                        type="email"
+                        value={email}
+                        ref={emailRef}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          handleRegex(e.target.value, "email");
+                        }}
+                        placeholder="이메일을 입력해주세요"
+                        align="center"
+                        style={{ width: "95%" }}
+                      />
+                    </td>
+                    <td rowSpan={2}>
+                      <button
+                        type="button"
+                        className={"btn-main"}
+                        style={{
+                          width: "80px",
+                          lineHeight: "13px",
+                          fontSize: "12px",
+                        }}
+                        disabled={active ? false : true}
+                        onClick={() => {
+                          console.log("active 클릭");
+                          UserService.setTemporalCode(emailRef.current.value);
+                        }}
+                      >
+                        &nbsp;코드발송&nbsp;
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <input
+                        className="input"
+                        type="text"
+                        ref={confirmCode}
+                        placeholder="이메일 인증코드를 확인해주세요."
+                        align="center"
+                        style={{ width: "95%" }}
+                      />
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td rowSpan={2}>*비밀번호</td>
-                      <td colSpan={2}>
-                        <input
-                          className="input"
-                          type="password"
-                          ref={passwd}
-                          placeholder="비밀번호를 입력해주세요"
-                          align="center"
-                          style={{ width: "90%" }}
-                        />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colSpan={2}>
-                        <input
-                          className="input"
-                          type="password"
-                          ref={pwCheck}
-                          placeholder="다시 한번 입력해주세요"
-                          align=""
-                          style={{ width: "90%" }}
-                        />
-                      </td>
-                    </tr>
+                  <tr>
+                    <td rowSpan={2}>*비밀번호</td>
+                    <td colSpan={2}>
+                      <input
+                        className="input"
+                        type="password"
+                        ref={passwd}
+                        placeholder="비밀번호를 입력해주세요"
+                        align="center"
+                        style={{ width: "90%" }}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan={2}>
+                      <input
+                        className="input"
+                        type="password"
+                        ref={pwCheck}
+                        placeholder="다시 한번 입력해주세요"
+                        align=""
+                        style={{ width: "90%" }}
+                      />
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>*이름</td>
-                      <td colSpan={2}>
-                        <input
-                          className="input"
-                          type="text"
-                          ref={name}
-                          placeholder="이름을 입력해주세요"
-                          align="center"
-                          style={{ width: "90%" }}
-                        />
-                      </td>
-                    </tr>
+                  <tr>
+                    <td>*이름</td>
+                    <td colSpan={2}>
+                      <input
+                        className="input"
+                        type="text"
+                        ref={name}
+                        placeholder="이름을 입력해주세요"
+                        align="center"
+                        style={{ width: "90%" }}
+                      />
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>*전화번호</td>
-                      <td colSpan={2}>
-                        <input
-                          className="input"
-                          type="text"
-                          maxLength={13}
-                          onChange={(e) => {
-                            handleRegex(e.target.value, "phone");
-                          }}
-                          value={phone}
-                          ref={phoneNum}
-                          placeholder="숫자만 입력해주세요"
-                          align="center"
-                          style={{ width: "90%" }}
-                        />
-                      </td>
-                    </tr>
+                  <tr>
+                    <td>*전화번호</td>
+                    <td colSpan={2}>
+                      <input
+                        className="input"
+                        type="text"
+                        maxLength={13}
+                        onChange={(e) => {
+                          handleRegex(e.target.value, "phone");
+                        }}
+                        value={phone}
+                        ref={phoneNum}
+                        placeholder="숫자만 입력해주세요"
+                        align="center"
+                        style={{ width: "90%" }}
+                      />
+                    </td>
+                  </tr>
 
-                    <tr>
-                      <td>&nbsp;&nbsp;프로필</td>
-                      <td colSpan={2}>
-                        <input
-                          className="form-control"
-                          type="file"
-                          ref={profile}
-                          style={{ width: "90%" }}
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                  <tr>
+                    <td>&nbsp;&nbsp;프로필</td>
+                    <td colSpan={2}>
+                      <input
+                        className="form-control"
+                        type="file"
+                        ref={profile}
+                        style={{ width: "90%" }}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <div className="col m-2 pt-3" align="right">

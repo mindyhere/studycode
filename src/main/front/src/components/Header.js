@@ -53,22 +53,22 @@ function Header() {
   if (token == null) {
     return (
       <>
-        <div className="container mt-3 d-flex flex-wrap justify-content-center">
+        <div className="container my-3 d-flex flex-wrap justify-content-center">
           <h1>
-            <a
-              href="/"
-              className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto"
-            >
+            <a className="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto">
               <MarkerTip />
               &nbsp;Studycode
             </a>
           </h1>
         </div>
         <nav className="py-2 bg-body-tertiary border-bottom">
-          <div className="container d-flex flex-wrap justify-content-center">
+          <div className="d-flex flex-wrap justify-content-center">
             <ul className="nav">
               <li className="nav-item mx-2">
-                <a href="/" className="nav-link link-body-emphasis px-2">
+                <a
+                  className="nav-link link-body-emphasis px-2"
+                  onClick={() => navigate("/")}
+                >
                   둘러보기
                 </a>
               </li>
@@ -78,7 +78,11 @@ function Header() {
                 </a>
               </li>
               <li className="nav-item mx-2">
-                <a href="/login" className="nav-link link-body-emphasis px-2">
+                <a
+                  className="nav-link link-body-emphasis px-2"
+                  onClick={() => navigate("/login")}
+                >
+                  {" "}
                   로그인/회원가입
                 </a>
               </li>
@@ -92,7 +96,7 @@ function Header() {
     timeoutAlert();
     return (
       <>
-        <div className="container mt-3 d-flex flex-wrap justify-content-center">
+        <div className="container my-3 d-flex flex-wrap justify-content-center">
           <h1>
             <a
               href="/"
@@ -104,10 +108,13 @@ function Header() {
           </h1>
         </div>
         <nav className="py-2 bg-body-tertiary border-bottom">
-          <div className="container d-flex flex-wrap justify-content-center">
+          <div className="d-flex flex-wrap justify-content-center">
             <ul className="nav">
               <li className="nav-item mx-2">
-                <a href="/" className="nav-link link-body-emphasis px-2">
+                <a
+                  className="nav-link link-body-emphasis px-2"
+                  onClick={() => navigate("/")}
+                >
                   둘러보기
                 </a>
               </li>

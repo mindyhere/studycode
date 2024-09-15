@@ -28,14 +28,14 @@ public class AuthController {
 
     /* 회원가입 API */
     @PostMapping("signUp")
-    public ResponseEntity signUp(@RequestParam Map<String, Object> map, @RequestParam(name = "photo", required = false) MultipartFile photo, HttpServletRequest request) {
-        System.out.println("==map==/n" + map);
+    public ResponseEntity signUp(@RequestParam Map<String, Object> form, @RequestParam(name = "photo", required = false) MultipartFile photo, HttpServletRequest request) {
+        System.out.println("==form==/n" + form);
         UserDTO dto = new UserDTO();
-        dto.setUserid(map.get("userid").toString());
-        dto.setPasswd(map.get("passwd").toString());
-        dto.setName(map.get("name").toString());
-        dto.setEmail(map.get("email").toString());
-        dto.setPhone(map.get("phone").toString());
+        dto.setUserid(form.get("userid").toString());
+        dto.setPasswd(form.get("passwd").toString());
+        dto.setName(form.get("name").toString());
+        dto.setEmail(form.get("email").toString());
+        dto.setPhone(form.get("phone").toString());
 
         if (photo != null && !photo.isEmpty()) {
             try {

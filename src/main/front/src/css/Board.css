@@ -1,0 +1,26 @@
+/* === 메인피드 CSS === */
+.col-4 .col-md-3 .mb-3{
+    width: 18rem;
+    height: 24rem;
+}
+
+.card {
+    max-width: 18rem;
+    max-height: 400px;
+    align-content: center;
+    cursor: pointer;
+}
+
+label{
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background-position: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+input{
+    display: none;
+}

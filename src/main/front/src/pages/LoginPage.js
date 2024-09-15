@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
-import "../css/Login.css";
 import JoinModal from "./JoinModal";
 import FindAccountModal from "./FindAccountModal";
-
 import UserService from "../services/UserService";
+
+import "../css/Login.css";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ function LoginPage() {
     <>
       <div className="main" align="center">
         <div className="organize-form form-area-signin">
-          <h2 align="center">Studycode</h2>
+          <h2 align="center" onClick={() => navigate("/")} style={{cursor:"pointer"}}>Studycode</h2>
           <br />
           <div className="form-field" style={{ width: "60%" }}>
             <input

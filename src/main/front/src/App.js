@@ -24,7 +24,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
-          {/*<Route path="/addPost" element={<AddPostPage />} />*/}
+          <Route path="/post/add" element={<AddPostPage />} />
         </Routes>
       </BrowserRouter>
     </>
